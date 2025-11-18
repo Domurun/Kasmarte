@@ -212,19 +212,6 @@
           border-color: var(--brand-black);
       }
 
-      /* Wishlist Heart Animation */
-      .wishlist-btn svg {
-          transition: fill 0.3s ease, stroke 0.3s ease, transform 0.2s ease;
-      }
-      .wishlist-btn.active svg {
-          fill: #000000;
-          stroke: #000000;
-          transform: scale(1.1);
-      }
-      .wishlist-btn:active svg {
-          transform: scale(0.9);
-      }
-
       /* Modal Styles */
       .modal-backdrop {
           background-color: rgba(0, 0, 0, 0.5);
@@ -272,25 +259,6 @@
                 <a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity duration-300 group" data-nav="store" title="Store" aria-label="Store">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                </a>
-            </li>
-
-            <!-- Wishlist Link -->
-            <li>
-                <a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity duration-300 group" data-nav="wishlist" title="Wishlist" aria-label="Wishlist">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                </a>
-            </li>
-
-            <!-- Profile Link -->
-            <li>
-                <a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity duration-300 group" data-nav="profile" title="Profile" aria-label="Profile">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11c1.657 0 3-1.567 3-3.5S17.657 4 16 4s-3 1.567-3 3.5S14.343 11 16 11zM6 20a6 6 0 0112 0" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14c-4 0-6 2-6 6" opacity="0"/>
                     </svg>
                 </a>
             </li>
@@ -376,6 +344,7 @@
 
 
     <!-- Header & Navigation -->
+    <!-- Resolved layout issue: Switched from Grid to Flexbox with absolute positioning for logo to prevent wrapping -->
     <header class="bg-brand-white bg-opacity-90 backdrop-blur-sm shadow-sm sticky top-0 z-30">
         <nav class="w-full px-6 md:px-12 py-4 flex justify-between items-center relative">
             
@@ -399,8 +368,7 @@
             <!-- Right: Navigation Links, Menu Toggle and Cart -->
             <div class="flex items-center justify-end space-x-4">
                 <!-- Desktop Links (Hidden on Mobile) -->
-                <a href="#" class="hidden md:block hover:opacity-70 transition-opacity font-body font-medium text-sm" data-nav="wishlist">Wishlist</a>
-                <a href="#" class="hidden md:block hover:opacity-70 transition-opacity font-body font-medium text-sm" data-nav="profile">Profile</a>
+                <a href="#" class="hidden md:block hover:opacity-70 transition-opacity font-body font-medium text-sm" data-nav="contact">Contact</a>
 
                 <!-- Mobile Menu Toggle Button -->
                 <button class="md:hidden hover:opacity-70 transition-opacity duration-300 z-50" id="menu-toggle-btn" aria-label="Open menu" title="Open menu" aria-expanded="false">
@@ -475,11 +443,6 @@
                 <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Product 1: Jacket -->
                     <div class="product-card group cursor-pointer relative" data-price="280">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=800&q=80" 
                                 alt="Desaturated photo of a tailored jacket"
@@ -489,11 +452,6 @@
                     </div>
                     <!-- Product 2: Bag -->
                     <div class="product-card group cursor-pointer relative" data-price="195">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80" 
                                 alt="Desaturated photo of a leather bag"
@@ -503,11 +461,6 @@
                     </div>
                     <!-- Product 3: Shoes -->
                     <div class="product-card group cursor-pointer relative" data-price="220">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=800&q=80" 
                                 alt="Desaturated photo of leather shoes"
@@ -547,11 +500,6 @@
                 <div id="store-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in">
                     <!-- Men's Items -->
                     <div class="product-card store-item group cursor-pointer relative" data-category="men" data-name="camicia di lino shirt" data-price="120">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80" alt="Men's Shirt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -559,11 +507,6 @@
                         <p class="font-body text-brand-black opacity-70">$120</p>
                     </div>
                     <div class="product-card store-item group cursor-pointer relative" data-category="men" data-name="pantaloni chino pants" data-price="160">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80" alt="Men's Trousers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -571,11 +514,6 @@
                         <p class="font-body text-brand-black opacity-70">$160</p>
                     </div>
                     <div class="product-card store-item group cursor-pointer relative" data-category="men" data-name="maglione di cachemire sweater" data-price="250">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1610652492500-ded49ceeb378?auto=format&fit=crop&w=800&q=80" alt="Men's Sweater" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -583,11 +521,6 @@
                         <p class="font-body text-brand-black opacity-70">$250</p>
                     </div>
                     <div class="product-card store-item group cursor-pointer relative" data-category="men" data-name="giacca da lavoro jacket" data-price="290">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1559551409-dadc959f76b8?auto=format&fit=crop&w=800&q=80" alt="Men's Jacket" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -597,11 +530,6 @@
 
                     <!-- Women's Items -->
                     <div class="product-card store-item group cursor-pointer relative" data-category="women" data-name="la giacca jacket" data-price="280">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=800&q=80" alt="Jacket" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -609,11 +537,6 @@
                         <p class="font-body text-brand-black opacity-70">$280</p>
                     </div>
                     <div class="product-card store-item group cursor-pointer relative" data-category="women" data-name="la borsa bag" data-price="195">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80" alt="Bag" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -621,11 +544,6 @@
                         <p class="font-body text-brand-black opacity-70">$195</p>
                     </div>
                     <div class="product-card store-item group cursor-pointer relative" data-category="women" data-name="le scarpe shoes" data-price="220">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80" alt="Shoes" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -633,11 +551,6 @@
                         <p class="font-body text-brand-black opacity-70">$220</p>
                     </div>
                     <div class="product-card store-item group cursor-pointer relative" data-category="women" data-name="abito di seta dress" data-price="310">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80" alt="Dress" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -655,11 +568,6 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Product: Camicia di Lino -->
                     <div class="product-card group cursor-pointer relative" data-price="120">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80" alt="Men's Shirt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -668,11 +576,6 @@
                     </div>
                     <!-- Product: Pantaloni Chino -->
                     <div class="product-card group cursor-pointer relative" data-price="160">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80" alt="Men's Trousers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -681,11 +584,6 @@
                     </div>
                     <!-- Product: Maglione di Cachemire -->
                     <div class="product-card group cursor-pointer relative" data-price="250">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1610652492500-ded49ceeb378?auto=format&fit=crop&w=800&q=80" alt="Men's Sweater" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -694,11 +592,6 @@
                     </div>
                     <!-- Product: Giacca da Lavoro -->
                     <div class="product-card group cursor-pointer relative" data-price="290">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1559551409-dadc959f76b8?auto=format&fit=crop&w=800&q=80" alt="Men's Jacket" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -716,11 +609,6 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Product: Giacca -->
                     <div class="product-card group cursor-pointer relative" data-price="280">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=800&q=80" alt="Jacket" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -729,11 +617,6 @@
                     </div>
                     <!-- Product: Borsa -->
                     <div class="product-card group cursor-pointer relative" data-price="195">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80" alt="Bag" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -742,11 +625,6 @@
                     </div>
                     <!-- Product: Scarpe -->
                     <div class="product-card group cursor-pointer relative" data-price="220">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80" alt="Shoes" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -755,11 +633,6 @@
                     </div>
                     <!-- Product: Abito di Seta -->
                     <div class="product-card group cursor-pointer relative" data-price="310">
-                        <button class="wishlist-btn absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Add to wishlist">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
                         <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
                             <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80" alt="Dress" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
@@ -832,11 +705,6 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                                 </svg>
                             </button>
-                            <button id="detail-wishlist-btn" class="wishlist-btn w-14 flex-shrink-0 border border-gray-300 rounded-md flex items-center justify-center hover:border-brand-black transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                            </button>
                         </div>
                         
                         <div class="text-xs text-gray-500 mt-4 space-y-2 font-body">
@@ -854,20 +722,6 @@
             </div>
         </section>
 
-        <!-- ===== WISHLIST PAGE ===== -->
-        <section class="page-section" data-page="wishlist">
-            <div class="container mx-auto px-6 py-12 md:py-20">
-                <h1 class="font-header-dramatic text-5xl md:text-6xl text-center mb-12">La Lista dei Desideri</h1>
-                
-                <div id="wishlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in">
-                    <!-- Wishlist items will be injected here via JS -->
-                    <div id="empty-wishlist-msg" class="col-span-full text-center text-gray-500 py-12 text-lg">
-                        Your wishlist is empty.
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- ===== CHECKOUT PAGE (Accessible via Cart) ===== -->
         <section class="page-section" data-page="checkout">
             <div class="container mx-auto px-6 py-12 md:py-20">
@@ -879,7 +733,7 @@
                         
                         <!-- Contact & Shipping -->
                         <div class="animate-fade-in">
-                            <h2 class="font-header text-2xl mb-6 uppercase tracking-wider">Shipping Address</h2>
+                            <h2 class="font-header text-2xl mb-6 uppercase tracking-wider">Shipping & Contact</h2>
                             <form class="space-y-6">
                                 <div class="grid grid-cols-2 gap-6">
                                     <div class="col-span-2 md:col-span-1">
@@ -891,6 +745,19 @@
                                         <input type="text" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="Doe">
                                     </div>
                                 </div>
+
+                                <!-- Added Email & Phone fields -->
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-2">Email</label>
+                                        <input type="email" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="ava.doe@example.com">
+                                    </div>
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-2">Phone Number</label>
+                                        <input type="tel" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="+1 (555) 123-4567">
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label class="block text-xs font-bold uppercase tracking-widest mb-2">Address</label>
                                     <input type="text" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="123 Fashion Ave">
@@ -968,143 +835,31 @@
             </div>
         </section>
 
-        <!-- ===== PROFILE / AUTH PAGE ===== -->
-        <section class="page-section" data-page="profile">
+        <!-- ===== CONTACT PAGE ===== -->
+        <section class="page-section" data-page="contact">
             <div class="container mx-auto px-6 py-12 md:py-20">
-                <div class="max-w-md mx-auto">
-                    
-                    <!-- LOGGED IN VIEW (Initially hidden) -->
-                    <div id="logged-in-view" class="hidden animate-fade-in text-center">
-                        <h1 class="font-header-dramatic text-5xl md:text-6xl mb-8">Welcome Back</h1>
-                        <p class="text-lg font-body mb-12">You are currently signed in.</p>
-                        <div class="space-y-4">
-                             <button id="btn-go-shop" class="w-full border border-brand-black text-brand-black font-bold uppercase tracking-widest py-4 hover:bg-brand-black hover:text-white transition-colors">
-                                Go Shopping
-                            </button>
-                            <button id="btn-sign-out" class="w-full bg-brand-black text-brand-white font-bold uppercase tracking-widest py-4 hover:opacity-90 transition-opacity">
-                                Sign Out
+                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">Contatti</h1>
+                <div class="max-w-xl mx-auto">
+                    <p class="text-center text-lg mb-10">Have a question? We're here to help. Reach out to our team.</p>
+                    <form action="#" method="POST" class="space-y-8">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-brand-black mb-2">Name</label>
+                            <input type="text" id="name" name="name" class="w-full px-1 py-2 bg-transparent border-0 border-b border-brand-black focus:outline-none focus:border-b-2 transition-colors duration-300" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-brand-black mb-2">Email</label>
+                            <input type="email" id="email" name="email" class="w-full px-1 py-2 bg-transparent border-0 border-b border-brand-black focus:outline-none focus:border-b-2 transition-colors duration-300" placeholder="your.email@example.com">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-brand-black mb-2">Message</label>
+                            <textarea id="message" name="message" rows="4" class="w-full px-1 py-2 bg-transparent border-0 border-b border-brand-black focus:outline-none focus:border-b-2 transition-colors duration-300" placeholder="How can we help?"></textarea>
+                        </div>
+                        <div class="text-center pt-4">
+                            <button type="submit" class="inline-block bg-brand-black text-brand-white font-body font-bold text-sm py-3 px-10 rounded-md hover:opacity-80 transition-colors duration-300 uppercase tracking-wider">
+                                Send Message
                             </button>
                         </div>
-                    </div>
-
-                    <!-- AUTH FORMS WRAPPER -->
-                    <div id="auth-forms-wrapper">
-                        <!-- Dynamic Title -->
-                        <h1 id="auth-title" class="font-header-dramatic text-5xl md:text-6xl text-center mb-12">Accedi</h1>
-                        
-                        <div class="bg-brand-white p-8 rounded-lg shadow-sm border border-brand-black border-opacity-5">
-                            
-                            <!-- LOGIN FORM -->
-                            <form id="login-form" class="space-y-6 animate-fade-in">
-                                <div>
-                                    <label for="login-email" class="block text-xs font-bold uppercase tracking-widest mb-2">Email</label>
-                                    <input type="email" id="login-email" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="email@example.com">
-                                </div>
-                                <div>
-                                    <div class="flex justify-between items-center mb-2">
-                                        <label for="login-password" class="block text-xs font-bold uppercase tracking-widest">Password</label>
-                                        <button type="button" id="btn-forgot-pass" class="text-xs text-gray-500 hover:text-brand-black underline">Forgot?</button>
-                                    </div>
-                                    <input type="password" id="login-password" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="••••••••">
-                                </div>
-                                <button type="submit" class="w-full bg-brand-black text-brand-white font-bold uppercase tracking-widest py-4 hover:opacity-90 transition-opacity">
-                                    Sign In
-                                </button>
-                                
-                                <!-- Social Divider -->
-                                <div class="relative flex py-2 items-center">
-                                    <div class="flex-grow border-t border-gray-200"></div>
-                                    <span class="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase">Or continue with</span>
-                                    <div class="flex-grow border-t border-gray-200"></div>
-                                </div>
-
-                                <!-- Social Buttons -->
-                                <div class="grid grid-cols-2 gap-4">
-                                    <button type="button" class="flex items-center justify-center border border-gray-300 py-2 hover:bg-gray-50 transition-colors">
-                                        <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-                                        Google
-                                    </button>
-                                    <button type="button" class="flex items-center justify-center border border-gray-300 py-2 hover:bg-gray-50 transition-colors">
-                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.78 1.18-.19 2.31-.89 3.51-.84 1.54.06 2.77.79 3.49 1.89-3.38 1.68-2.82 6.12.64 7.53-.54 1.65-1.35 3.31-2.72 3.61zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-                                        Apple
-                                    </button>
-                                </div>
-
-                                <div class="text-center mt-6 text-sm">
-                                    <span class="text-gray-500">New to KasMarte?</span>
-                                    <button type="button" id="btn-show-register" class="font-bold ml-1 underline hover:text-gray-600">Create an account</button>
-                                </div>
-                            </form>
-
-                            <!-- REGISTER FORM (Hidden by default) -->
-                            <form id="register-form" class="space-y-6 hidden animate-fade-in">
-                                 <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="reg-first" class="block text-xs font-bold uppercase tracking-widest mb-2">First Name</label>
-                                        <input type="text" id="reg-first" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="Ava">
-                                    </div>
-                                    <div>
-                                        <label for="reg-last" class="block text-xs font-bold uppercase tracking-widest mb-2">Last Name</label>
-                                        <input type="text" id="reg-last" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="Doe">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label for="reg-email" class="block text-xs font-bold uppercase tracking-widest mb-2">Email</label>
-                                    <input type="email" id="reg-email" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="email@example.com">
-                                </div>
-                                <div>
-                                    <label for="reg-password" class="block text-xs font-bold uppercase tracking-widest mb-2">Password</label>
-                                    <input type="password" id="reg-password" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="Create a password">
-                                </div>
-                                
-                                <button type="button" class="w-full bg-brand-black text-brand-white font-bold uppercase tracking-widest py-4 hover:opacity-90 transition-opacity">
-                                    Create Account
-                                </button>
-
-                                <!-- Social Divider -->
-                                <div class="relative flex py-2 items-center">
-                                    <div class="flex-grow border-t border-gray-200"></div>
-                                    <span class="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase">Or sign up with</span>
-                                    <div class="flex-grow border-t border-gray-200"></div>
-                                </div>
-
-                                 <!-- Social Buttons (Repeated) -->
-                                <div class="grid grid-cols-2 gap-4">
-                                    <button type="button" class="flex items-center justify-center border border-gray-300 py-2 hover:bg-gray-50 transition-colors">
-                                        <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-                                        Google
-                                    </button>
-                                    <button type="button" class="flex items-center justify-center border border-gray-300 py-2 hover:bg-gray-50 transition-colors">
-                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.78 1.18-.19 2.31-.89 3.51-.84 1.54.06 2.77.79 3.49 1.89-3.38 1.68-2.82 6.12.64 7.53-.54 1.65-1.35 3.31-2.72 3.61zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-                                        Apple
-                                    </button>
-                                </div>
-
-                                <div class="text-center mt-6 text-sm">
-                                    <span class="text-gray-500">Already have an account?</span>
-                                    <button type="button" id="btn-show-login" class="font-bold ml-1 underline hover:text-gray-600">Sign In</button>
-                                </div>
-                            </form>
-
-                            <!-- FORGOT PASSWORD FORM (Hidden by default) -->
-                            <form id="forgot-form" class="space-y-6 hidden animate-fade-in">
-                                <p class="text-sm text-gray-600 mb-4">Enter the email address associated with your account and we'll send you a link to reset your password.</p>
-                                <div>
-                                    <label for="forgot-email" class="block text-xs font-bold uppercase tracking-widest mb-2">Email</label>
-                                    <input type="email" id="forgot-email" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="email@example.com">
-                                </div>
-                                
-                                <button type="button" class="w-full bg-brand-black text-brand-white font-bold uppercase tracking-widest py-4 hover:opacity-90 transition-opacity">
-                                    Send Recovery Link
-                                </button>
-
-                                <div class="text-center mt-6 text-sm">
-                                    <button type="button" id="btn-back-to-login" class="font-bold underline hover:text-gray-600">Back to Sign In</button>
-                                </div>
-                            </form>
-
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </section>
@@ -1207,8 +962,6 @@
 
             // --- State ---
             let cart = [];
-            let wishlist = [];
-            let isLoggedIn = false; // Authentication state
 
             // --- Hero Video Logic (Mobile Autoplay & Loop) ---
             const heroVideo = document.querySelector('video');
@@ -1252,102 +1005,6 @@
             handleLogoScroll(); // Run once on load to set initial state correctly
 
 
-            // --- Profile Page Auth Toggle Logic ---
-            const authTitle = document.getElementById('auth-title');
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const forgotForm = document.getElementById('forgot-form');
-            const loggedInView = document.getElementById('logged-in-view');
-            const authFormsWrapper = document.getElementById('auth-forms-wrapper');
-            
-            const btnShowRegister = document.getElementById('btn-show-register');
-            const btnShowLogin = document.getElementById('btn-show-login');
-            const btnForgotPass = document.getElementById('btn-forgot-pass');
-            const btnBackToLogin = document.getElementById('btn-back-to-login');
-            const btnSignOut = document.getElementById('btn-sign-out');
-            const btnGoShop = document.getElementById('btn-go-shop');
-
-
-            function updateProfileUI() {
-                if (isLoggedIn) {
-                    if(authFormsWrapper) authFormsWrapper.classList.add('hidden');
-                    if(loggedInView) loggedInView.classList.remove('hidden');
-                } else {
-                    if(loggedInView) loggedInView.classList.add('hidden');
-                    if(authFormsWrapper) authFormsWrapper.classList.remove('hidden');
-                    switchAuthView('login'); // Reset to login view
-                }
-            }
-
-            // Handle Sign In Form Submission
-            if (loginForm) {
-                loginForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    // Simulate Login
-                    isLoggedIn = true;
-                    updateProfileUI();
-                });
-            }
-
-            // Handle Sign Out
-            if (btnSignOut) {
-                btnSignOut.addEventListener('click', () => {
-                    isLoggedIn = false;
-                    updateProfileUI();
-                });
-            }
-
-            // Go Shopping Button
-            if (btnGoShop) {
-                btnGoShop.addEventListener('click', () => {
-                    showPage('store');
-                });
-            }
-
-            /**
-             * Switches the view in the Profile section (Login, Register, Forgot Password).
-             * @param {string} view - 'login', 'register', or 'forgot'.
-             */
-            function switchAuthView(view) {
-                // Hide all forms and remove animation class
-                [loginForm, registerForm, forgotForm].forEach(form => {
-                    if (form) {
-                        form.classList.add('hidden');
-                        form.classList.remove('animate-fade-in');
-                    }
-                });
-                
-                // Show requested view and set title
-                let targetForm;
-                let titleText;
-
-                if (view === 'register') {
-                    targetForm = registerForm;
-                    titleText = 'Registrati';
-                } else if (view === 'forgot') {
-                    targetForm = forgotForm;
-                    titleText = 'Recupera Password';
-                } else { // Default to login
-                    targetForm = loginForm;
-                    titleText = 'Accedi';
-                }
-
-                if (targetForm) {
-                    // Re-add the animation class right before showing
-                    targetForm.classList.remove('hidden');
-                    // Force repaint to restart animation
-                    void targetForm.offsetWidth;
-                    targetForm.classList.add('animate-fade-in');
-                }
-                if(authTitle) authTitle.textContent = titleText;
-            }
-
-            // Attach listeners for form switching
-            if (btnShowRegister) { btnShowRegister.addEventListener('click', () => switchAuthView('register')); }
-            if (btnShowLogin) { btnShowLogin.addEventListener('click', () => switchAuthView('login')); }
-            if (btnForgotPass) { btnForgotPass.addEventListener('click', () => switchAuthView('forgot')); }
-            if (btnBackToLogin) { btnBackToLogin.addEventListener('click', () => switchAuthView('login')); }
-            
             // --- Cart & Checkout Logic ---
             const checkoutItemsContainer = document.getElementById('checkout-items-container');
             const subtotalEl = document.getElementById('checkout-subtotal');
@@ -1367,11 +1024,6 @@
 
             /** Adds an item to the cart state */
             function addToCart(product) {
-                if (!isLoggedIn) {
-                    showPage('profile');
-                    return;
-                }
-
                 cart.push(product);
                 updateCartCount();
                 // Visual feedback
@@ -1414,7 +1066,6 @@
                                 <h4 class="font-body font-bold text-sm">${item.name}</h4>
                                 <p class="text-xs text-gray-500 mb-1">Size: ${item.size}</p>
                                 <p class="font-bold text-sm">$${item.price}</p>
-                                <button class="move-to-wishlist-btn text-xs underline text-gray-500 hover:text-brand-black mt-2" data-index="${index}">Save for Later</button>
                             </div>
                             <button class="remove-item-btn text-gray-400 hover:text-red-600 transition-colors absolute top-0 right-0" data-index="${index}" title="Remove item">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -1439,32 +1090,6 @@
                         renderCheckout();
                     });
                 });
-                
-                // Move to Wishlist Listener
-                document.querySelectorAll('.move-to-wishlist-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        if (!isLoggedIn) {
-                            showPage('profile');
-                            return;
-                        }
-
-                        const index = parseInt(e.currentTarget.getAttribute('data-index'));
-                        const item = cart[index];
-                        
-                        // Check if already in wishlist to avoid duplicates
-                        const exists = wishlist.some(w => w.name === item.name);
-                        if (!exists) {
-                            wishlist.push(item);
-                        }
-                        
-                        // Remove from cart
-                        cart.splice(index, 1);
-                        updateCartCount();
-                        renderCheckout();
-                        
-                        alert(`Moved ${item.name} to Wishlist`);
-                    });
-                });
             }
 
             // --- Product Detail Page Logic ---
@@ -1484,15 +1109,6 @@
                 document.getElementById('detail-title').textContent = title;
                 document.getElementById('detail-price').textContent = '$' + price;
                 document.getElementById('detail-breadcrumb-name').textContent = title;
-
-                // Update Detail Page Wishlist Button State
-                const detailWishlistBtn = document.getElementById('detail-wishlist-btn');
-                const isInWishlist = wishlist.some(item => item.name === title);
-                if (isInWishlist) {
-                    detailWishlistBtn.classList.add('active');
-                } else {
-                    detailWishlistBtn.classList.remove('active');
-                }
 
                 // Reset add to cart button state
                 const addBtn = document.getElementById('add-to-cart-btn');
@@ -1566,135 +1182,6 @@
                 searchInput.addEventListener('input', filterStore);
             }
 
-
-            // --- Wishlist Logic ---
-            
-            /** Renders the wishlist items */
-            function renderWishlist() {
-                const wishlistGrid = document.getElementById('wishlist-grid');
-                if (!wishlistGrid) return;
-                
-                wishlistGrid.innerHTML = '';
-                
-                if (wishlist.length === 0) {
-                    wishlistGrid.innerHTML = '<div class="col-span-full text-center text-gray-500 py-12 text-lg">Your wishlist is empty.</div>';
-                    return;
-                }
-
-                wishlist.forEach((item) => {
-                    const itemHtml = `
-                    <div class="product-card group cursor-pointer relative animate-fade-in" data-price="${item.price}">
-                        <button class="wishlist-btn active absolute top-3 right-3 z-10 p-2 rounded-full hover:bg-white/50 transition-colors" aria-label="Remove from wishlist" data-name="${item.name}">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                        </button>
-                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
-                            <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
-                        </div>
-                        <h4 class="font-body font-bold text-lg">${item.name}</h4>
-                        <p class="font-body text-brand-black opacity-70">$${item.price}</p>
-                    </div>
-                    `;
-                    wishlistGrid.insertAdjacentHTML('beforeend', itemHtml);
-                });
-            }
-
-            /** Toggles an item in the wishlist */
-            function toggleWishlist(btn, productData = null) {
-                if (!isLoggedIn) {
-                    showPage('profile');
-                    return;
-                }
-
-                // If we are on the Detail page
-                if (btn.id === 'detail-wishlist-btn') {
-                    const title = document.getElementById('detail-title').textContent;
-                    const img = document.getElementById('detail-image').src;
-                    const priceTxt = document.getElementById('detail-price').textContent;
-                    const price = parseInt(priceTxt.replace(/[^0-9]/g, ''));
-                    
-                    const existingIndex = wishlist.findIndex(item => item.name === title);
-                    if (existingIndex > -1) {
-                        wishlist.splice(existingIndex, 1);
-                        btn.classList.remove('active');
-                    } else {
-                        wishlist.push({ name: title, img: img, price: price });
-                        btn.classList.add('active');
-                    }
-                } 
-                // If we are on a Card (Store/Home/Wishlist page)
-                else {
-                    const card = btn.closest('.product-card');
-                    let name, img, price;
-
-                    // If clicking remove on Wishlist page, we might need data from button attributes if card structure differs
-                    // But here structure is consistent.
-                    if (card) {
-                         name = card.querySelector('h4').textContent;
-                         img = card.querySelector('img').src;
-                         price = parseInt(card.dataset.price || card.querySelector('p')?.textContent.replace(/[^0-9]/g, '') || 0);
-                    } else if (btn.dataset.name) {
-                        // Fallback if for some reason card isn't found but we stored data on btn
-                        name = btn.dataset.name;
-                    }
-
-                    if (!name) return;
-
-                    const existingIndex = wishlist.findIndex(item => item.name === name);
-                    
-                    if (existingIndex > -1) {
-                        // Remove
-                        wishlist.splice(existingIndex, 1);
-                        btn.classList.remove('active');
-                        
-                        // If we are currently viewing the wishlist page, re-render to remove the item visually
-                        const wishlistSection = document.querySelector('.page-section[data-page="wishlist"]');
-                        if (wishlistSection && wishlistSection.classList.contains('active')) {
-                            renderWishlist();
-                        }
-                    } else {
-                        // Add
-                        wishlist.push({ name: name, img: img, price: price });
-                        btn.classList.add('active');
-                    }
-                }
-                
-                // Sync UI: If we modified the wishlist, we should update all heart icons across the site to match state
-                updateAllHeartIcons();
-            }
-
-            function updateAllHeartIcons() {
-                // Update all buttons on cards
-                document.querySelectorAll('.product-card .wishlist-btn').forEach(btn => {
-                    const card = btn.closest('.product-card');
-                    const name = card.querySelector('h4').textContent;
-                    const isInWishlist = wishlist.some(i => i.name === name);
-                    if (isInWishlist) btn.classList.add('active');
-                    else btn.classList.remove('active');
-                });
-                
-                // Update detail page button if visible
-                const detailTitle = document.getElementById('detail-title');
-                const detailBtn = document.getElementById('detail-wishlist-btn');
-                if (detailTitle && detailBtn) {
-                    const name = detailTitle.textContent;
-                    const isInWishlist = wishlist.some(i => i.name === name);
-                    if (isInWishlist) detailBtn.classList.add('active');
-                    else detailBtn.classList.remove('active');
-                }
-            }
-
-            // Wishlist Button Click Listener (Delegation)
-            document.addEventListener('click', (e) => {
-                const btn = e.target.closest('.wishlist-btn');
-                if (btn) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleWishlist(btn);
-                }
-            });
-
             // --- Size Guide Modal Logic ---
             const modal = document.getElementById('size-guide-modal');
             const trigger = document.getElementById('size-guide-trigger');
@@ -1766,16 +1253,6 @@
                 // Special logic for checkout page render
                 if (pageName === 'checkout') {
                     renderCheckout();
-                }
-                
-                // Special logic for wishlist page render
-                if (pageName === 'wishlist') {
-                    renderWishlist();
-                }
-                
-                // Special logic for profile page to show correct state
-                if (pageName === 'profile') {
-                    updateProfileUI();
                 }
 
                 // Scroll to top
