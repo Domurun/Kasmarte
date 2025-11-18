@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M | Luxury Italian Fashion</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts Import -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Oswald:wght@300&display=swap" rel="stylesheet">
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-black': '#000000',
+                        'brand-white': '#FFFFFF',
+                    },
+                    fontFamily: {
+                        // Headers (ALTA approximation)
+                        header: ['Oswald', 'sans-serif'], 
+                        // Body (Montserrat Classic)
+                        body: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+      :root{
+        --brand-black: #000;
+        --brand-white: #fff;
+        --container-max: 1200px;
+      }
+
+      /* Base */
+      *{box-sizing:border-box}
+      html,body{height:100%}
+      body{
+        margin:0;
+        font-family: 'Montserrat', sans-serif;
+        color:var(--brand-black);
+        background:var(--brand-white);
+        -webkit-font-smoothing:antialiased;
+        -moz-osx-font-smoothing:grayscale;
+      }
+
+      /* Tailwind utility fallbacks used by the page */
+      .bg-brand-white{background:var(--brand-white)}
+      .text-brand-black{color:var(--brand-black)}
+      .font-body{font-family:'Montserrat',sans-serif}
+      .font-header{font-family:'Oswald',sans-serif;font-weight:300;letter-spacing:.08em}
+
+      /* Simple container like Tailwind's 'container mx-auto px-6' */
+      .container{
+        max-width:var(--container-max);
+        margin:0 auto;
+        padding-left:24px;
+        padding-right:24px;
+      }
+
+      /* Header / nav */
+      header {
+        position: sticky;
+        top:0;
+        z-index:30;
+        background:rgba(255,255,255,0.92);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        border-bottom:1px solid rgba(0,0,0,0.06);
+      }
+      nav{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;padding:1rem 0}
+      nav .flex{display:flex}
+      nav .justify-start{justify-content:flex-start}
+      nav .justify-center{justify-content:center}
+      nav .justify-end{justify-content:flex-end}
+      nav a {color:inherit;text-decoration:none}
+
+      /* Style for the dramatic, thin header */
+      .font-header-dramatic {
+          font-family: 'Oswald', sans-serif;
+          font-weight: 300;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+      }
+
+      /* Basic responsive grid utilities used by the page */
+      .grid{display:grid;gap:1.5rem}
+      .grid-cols-1{grid-template-columns:1fr}
+      @media(min-width:768px){ .md\\:grid-cols-2{grid-template-columns:repeat(2,1fr)} }
+      @media(min-width:1024px){ .lg\\:grid-cols-3{grid-template-columns:repeat(3,1fr)} .lg\\:grid-cols-4{grid-template-columns:repeat(4,1fr)} }
+
+      /* Video hero */
+      .relative{position:relative}
+      .absolute{position:absolute}
+      .inset-0{top:0;right:0;bottom:0;left:0}
+      .object-cover{object-fit:cover}
+      .h-\[70vh\]{height:70vh}
+      @media(min-width:768px){ .md\\:h-screen{height:100vh} }
+      .hero-overlay{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem}
+
+      /* Heading sizes */
+      .font-header-dramatic{font-family:'Oswald',sans-serif;font-weight:300;text-transform:uppercase;letter-spacing:.05em}
+      h1.font-header-dramatic{margin:0}
+      h1.text-6xl{font-size:3.5rem;line-height:1}
+      @media(min-width:768px){ h1.md\\:text-9xl{font-size:6rem} }
+
+      /* Buttons */
+      .button{
+        display:inline-block;
+        background:var(--brand-white);
+        color:var(--brand-black);
+        padding:.6rem 1.25rem;
+        border-radius:6px;
+        text-transform:uppercase;
+        font-weight:700;
+        letter-spacing:.08em;
+        text-decoration:none;
+        transition:opacity .25s, background .25s;
+      }
+      .button:hover{opacity:.85}
+
+      /* Cards / product */
+      .card{background:var(--brand-white);border-radius:8px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.06)}
+      .card img{width:100%;height:auto;display:block;transition:transform .45s ease}
+      .group:hover .card img{transform:scale(1.03)}
+
+      /* Footer accordion behavior helpers */
+      .footer-accordion-btn{cursor:pointer;background:transparent;border:0;padding:0;display:flex;justify-content:space-between;align-items:center;width:100%}
+      .footer-accordion-content.hidden{display:none}
+      .footer-accordion-content{margin:0;padding-left:0}
+
+      /* Menu overlay fallback */
+      #new-menu-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--brand-white);z-index:40;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+      #new-menu-overlay.menu-open{opacity:1;visibility:visible}
+
+      /* Utility spacing used across page */
+      .px-6{padding-left:24px;padding-right:24px}
+      .py-12{padding-top:3rem;padding-bottom:3rem}
+      .py-20{padding-top:5rem;padding-bottom:5rem}
+      .mb-4{margin-bottom:1rem}
+      .mb-10{margin-bottom:2.5rem}
+      .text-center{text-align:center}
+
+      /* Responsive tweaks */
+      @media(min-width:768px){
+        .container{padding-left:32px;padding-right:32px}
+        .text-lg{font-size:1.125rem}
+      }
+
+      /* Ensure page sections that are active display */
+      .page-section{display:none}
+      .page-section.active{display:block}
+
+      /* Video overlay text shadow */
+      .video-overlay-text {
+          text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Footer accordion icon transition */
+      .footer-accordion-btn span {
+          transition: transform 0.3s ease;
+      }
+      .footer-accordion-btn.open span {
+          transform: rotate(45deg);
+      }
+
+      /* Menu Overlay Transition (duplicate-safe rule) */
+      #new-menu-overlay {
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+      }
+      #new-menu-overlay.menu-open {
+          opacity: 1;
+          visibility: visible;
+      }
+
+      /* Fix video hero styling */
+      .page-section.active .relative {
+          display: block;
+      }
+
+      /* Ensure images display properly */
+      img {
+          max-width: 100%;
+          height: auto;
+      }
+
+      /* Fix grid display on page transitions */
+      .page-section.active .grid {
+          display: grid;
+      }
+
+      /* Ensure sections have proper flow */
+      section {
+          width: 100%;
+      }
+    </style>
+</head>
+<body class="bg-brand-white font-body text-brand-black">
+
+    <!-- New Fullscreen Menu (Hidden by default) -->
+    <div id="new-menu-overlay" class="fixed top-0 left-0 w-full h-screen bg-brand-white z-40 flex items-center justify-center">
+        <ul class="flex flex-col items-center space-y-12">
+            <!-- Home Link -->
+            <li>
+                <a href="#" class="hover:opacity-70 transition-opacity duration-300" data-nav="home" title="Home" aria-label="Home">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 11.5L12 4l9 7.5M5 21h14a1 1 0 001-1V11.5L12 5 4 11.5V20a1 1 0 001 1z"/>
+                    </svg>
+                </a>
+            </li>
+
+            <!-- Profile Link -->
+            <li>
+                <a href="#" class="hover:opacity-70 transition-opacity duration-300" data-nav="profile" title="Profile" aria-label="Profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11c1.657 0 3-1.567 3-3.5S17.657 4 16 4s-3 1.567-3 3.5S14.343 11 16 11zM6 20a6 6 0 0112 0" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14c-4 0-6 2-6 6" opacity="0"/>
+                    </svg>
+                </a>
+            </li>
+
+            <!-- Male Link -->
+            <li>
+                <a href="#" class="hover:opacity-70 transition-opacity duration-300" data-nav="men" title="Men" aria-label="Men">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 3h7v7M21 3l-8.5 8.5M7 21a6 6 0 100-12 6 6 0 000 12z" />
+                    </svg>
+                </a>
+            </li>
+
+            <!-- Female Link -->
+            <li>
+                <a href="#" class="hover:opacity-70 transition-opacity duration-300" data-nav="women" title="Women" aria-label="Women">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a5 5 0 00-5 5c0 2.5 2 4.5 4.5 4.5S16 9.5 16 7a5 5 0 00-4-5zM12 11v9" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 20h6" />
+                    </svg>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header class="bg-brand-white bg-opacity-90 backdrop-blur-sm shadow-sm sticky top-0 z-30">
+        <nav class="container mx-auto px-6 py-4 grid grid-cols-3 items-center">
+            
+            <!-- Left: placeholder to maintain layout -->
+            <div class="flex justify-start">
+                <!-- intentionally empty to keep logo centered -->
+            </div>
+
+            <!-- Center: Logo 'M' -->
+            <div class="flex justify-center">
+                <a href="#" class="font-header text-4xl font-light tracking-wider" data-nav="home">
+                    M
+                </a>
+            </div>
+            
+            <!-- Right: Menu Toggle moved here with Cart -->
+            <div class="flex items-center justify-end space-x-4">
+                <button class="hover:opacity-70 transition-opacity duration-300 z-50" id="menu-toggle-btn" aria-label="Open menu" title="Open menu" aria-expanded="false">
+                    <span class="sr-only">Open navigation menu</span>
+                    <!-- Plus Icon -->
+                    <svg id="icon-plus" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <!-- Minus Icon (Hidden) -->
+                    <svg id="icon-minus" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                    </svg>
+                </button>
+
+                <button class="hover:opacity-70 transition-opacity duration-300" aria-label="Open shopping cart" title="Open shopping cart">
+                    <!-- Cart Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    
+    <!-- End Inserted Video -->
+
+    <!-- Page Content Wrapper -->
+    <main>
+
+        <!-- ===== HOME PAGE ===== -->
+        <section class="page-section active" data-page="home">
+            
+            <!-- Video Hero Section -->
+            <div class="relative h-[70vh] md:h-screen w-full overflow-hidden">
+                <!-- Video Background -->
+                <video autoplay loop muted class="absolute top-0 left-0 w-full h-full object-cover">
+                    <!-- Updated video to a running horse in black and white -->
+                    <source src="/assets/video/Video_Black_and_White_Conversion.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                
+                <!-- Text & Button Overlay -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                    <h1 class="font-header-dramatic text-6xl md:text-9xl lg:text-[10rem] leading-none text-brand-white video-overlay-text mb-4">
+                        KasMarte
+                    </h1>
+                    <p class="text-lg md:text-xl font-body font-medium max-w-2xl mx-auto mb-10 text-brand-white video-overlay-text">
+                        Scoperta. Lusso. Senza tempo.
+                    </p>
+                    <a href="#" class="inline-block bg-brand-white text-brand-black font-body font-bold text-sm py-3 px-10 rounded-md hover:bg-opacity-80 transition-colors duration-300 uppercase tracking-wider">
+                        Let's take a trip to KasMarte
+                    </a>
+                </div>
+            </div>
+
+            <!-- About Section (from Studio) -->
+            <section class="container mx-auto px-6 py-20 md:py-32" id="about">
+                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">About M</h1>
+                <div class="max-w-3xl mx-auto font-body text-lg leading-relaxed space-y-6">
+                    <p class="text-xl text-center">Fatto a mano nel nostro studio. Uniamo la tradizione artigianale con un design moderno e un prezzo giusto.</p>
+                    <div class="bg-brand-white rounded-lg shadow-sm overflow-hidden border border-brand-black border-opacity-10">
+                        <img src="https://placehold.co/1200x800/000/FFF?text=Artigianato" alt="Craftsmanship in studio" class="w-full h-auto object-cover">
+                    </div>
+                    <p>Our philosophy is simple: create beautiful, high-quality garments that last, and offer them at a price that respects both the maker and the customer. We bypass traditional luxury markups by selling directly to you.</p>
+                    <p>Each piece is designed and crafted in our small studio in Florence, where we focus on natural materials, precise tailoring, and the quiet confidence of a perfect fit.</p>
+                </div>
+            </section>
+
+            <!-- Lookbook Section (from New Arrivals) -->
+            <section class="w-full px-6 pb-20 md:pb-32" id="lookbook">
+                <h3 class="font-header-dramatic text-4xl text-center mb-12 container mx-auto">Lookbook</h3>
+                <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Product 1 -->
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=La+Giacca" 
+                                 alt="Desaturated photo of a tailored jacket"
+                                 class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">La Giacca</h4>
+                        <p class="font-body text-brand-black opacity-70">$280</p>
+                    </div>
+                    <!-- Product 2 -->
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=La+Borsa" 
+                                 alt="Desaturated photo of a leather bag"
+                                 class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">La Borsa</h4>
+                        <p class="font-body text-brand-black opacity-70">$195</p>
+                    </div>
+                    <!-- Product 3 -->
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=Le+Scarpe" 
+                                 alt="Desaturated photo of leather shoes"
+                                 class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">Le Scarpe</h4>
+                        <p class="font-body text-brand-black opacity-70">$220</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- ===== MEN PAGE ===== -->
+        <section class="page-section" data-page="men">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">Uomo</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Placeholder products -->
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=Camicia" alt="Men's Shirt" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">Camicia di Lino</h4>
+                        <p class="font-body text-brand-black opacity-70">$120</p>
+                    </div>
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=Pantaloni" alt="Men's Trousers" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">Pantaloni Chino</h4>
+                        <p class="font-body text-brand-black opacity-70">$160</p>
+                    </div>
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=Maglione" alt="Men's Sweater" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">Maglione di Cachemire</h4>
+                        <p class="font-body text-brand-black opacity-70">$250</p>
+                    </div>
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=Giacca" alt="Men's Jacket" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">Giacca da Lavoro</h4>
+                        <p class="font-body text-brand-black opacity-70">$290</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== WOMEN PAGE ===== -->
+        <section class="page-section" data-page="women">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">Donna</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Re-using products from home for demo -->
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=La+Giacca" alt="Jacket" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">La Giacca</h4>
+                        <p class="font-body text-brand-black opacity-70">$280</p>
+                    </div>
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=La+Borsa" alt="Bag" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">La Borsa</h4>
+                        <p class="font-body text-brand-black opacity-70">$195</p>
+                    </div>
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=Le+Scarpe" alt="Shoes" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">Le Scarpe</h4>
+                        <p class="font-body text-brand-black opacity-70">$220</p>
+                    </div>
+                    <div class="group">
+                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
+                            <img src="https://placehold.co/600x800/000/FFF?text=Abito" alt="Dress" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                        </div>
+                        <h4 class="font-body font-bold text-lg">Abito di Seta</h4>
+                        <p class="font-body text-brand-black opacity-70">$310</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CONTACT PAGE ===== -->
+        <section class="page-section" data-page="contact">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">Contatti</h1>
+                <div class="max-w-xl mx-auto">
+                    <p class="text-center text-lg mb-10">Have a question? We're here to help. Reach out to our team.</p>
+                    <form action="#" method="POST" class="space-y-8">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-brand-black mb-2">Name</label>
+                            <input type="text" id="name" name="name" class="w-full px-1 py-2 bg-transparent border-0 border-b border-brand-black focus:outline-none focus:border-b-2 transition-colors duration-300" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-brand-black mb-2">Email</label>
+                            <input type="email" id="email" name="email" class="w-full px-1 py-2 bg-transparent border-0 border-b border-brand-black focus:outline-none focus:border-b-2 transition-colors duration-300" placeholder="your.email@example.com">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-brand-black mb-2">Message</label>
+                            <textarea id="message" name="message" rows="4" class="w-full px-1 py-2 bg-transparent border-0 border-b border-brand-black focus:outline-none focus:border-b-2 transition-colors duration-300" placeholder="How can we help?"></textarea>
+                        </div>
+                        <div class="text-center pt-4">
+                            <button type="submit" class="inline-block bg-brand-black text-brand-white font-body font-bold text-sm py-3 px-10 rounded-md hover:bg-opacity-80 transition-colors duration-300 uppercase tracking-wider">
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-brand-black border-opacity-20">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                
+                <!-- Brand Accordion -->
+                <div>
+                    <button class="font-bold mb-4 w-full flex justify-between items-center footer-accordion-btn">
+                        Brand
+                        <span class="text-xl font-light transform transition-transform duration-300">+</span>
+                    </button>
+                    <ul class="space-y-2 text-sm hidden footer-accordion-content">
+                        <li><a href="#" class="hover:opacity-70" data-nav="home">Our Story</a></li>
+                        <li><a href="#" class="hover:opacity-70" data-nav="home">Poetic Manifesto</a></li>
+                        <li><a href="#" class="hover:opacity-70">Careers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Help & Support Accordion -->
+                <div>
+                    <button class="font-bold mb-4 w-full flex justify-between items-center footer-accordion-btn">
+                        Help & Support
+                        <span class="text-xl font-light transform transition-transform duration-300">+</span>
+                    </button>
+                    <ul class="space-y-2 text-sm hidden footer-accordion-content">
+                        <li><a href="#" class="hover:opacity-70" data-nav="contact">Contact Us</a></li>
+                        <li><a href="#" class="hover:opacity-70">FAQ</a></li>
+                        <li><a href="#" class="hover:opacity-70">Shipping & Returns</a></li>
+                    </ul>
+                </div>
+
+                <!-- Connect (Socials / Newsletter) -->
+                <div>
+                    <button class="font-bold mb-4 w-full flex justify-between items-center footer-accordion-btn">
+                        Connect
+                        <span class="text-xl font-light transform transition-transform duration-300">+</span>
+                    </button>
+                    <div class="space-y-4 text-sm footer-accordion-content hidden">
+                        <div class="flex space-x-4">
+                            <a href="#" class="hover:opacity-70" title="Follow us on Instagram" aria-label="Follow us on Instagram">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            </a>
+                            <a href="#" class="hover:opacity-70" title="Follow us on Facebook" aria-label="Follow us on Facebook">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                            </a>
+                            <a href="#" class="hover:opacity-70" title="Follow us on Twitter" aria-label="Follow us on Twitter">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                            </a>
+                            <!-- TikTok -->
+                            <a href="#" class="hover:opacity-70" title="Follow us on TikTok" aria-label="Follow us on TikTok">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48" fill="currentColor" aria-hidden="true">
+                                    <!-- Simplified TikTok mark -->
+                                    <path d="M34.1 14.6c-1.1-.3-2.2-.5-3.4-.5v9.8c0 6.1-4.9 11-11 11-6.1 0-11-4.9-11-11s4.9-11 11-11v4.1c-3.8 0-6.9 3.1-6.9 6.9s3.1 6.9 6.9 6.9c3.8 0 6.9-3.1 6.9-6.9V14.6h6.5v-4z"/>
+                                </svg>
+                            </a>
+                        </div>
+
+                        <form action="#" method="POST" class="space-y-3">
+                            <label for="newsletter" class="sr-only">Subscribe to newsletter</label>
+                            <div class="flex">
+                                <input id="newsletter" name="newsletter" type="email" placeholder="Email address" class="w-full px-3 py-2 border border-brand-black border-opacity-10 rounded-l-md focus:outline-none" />
+                                <button type="submit" class="bg-brand-black text-brand-white px-4 rounded-r-md">Subscribe</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="text-center text-sm text-brand-black text-opacity-70">
+                &copy; 2025 KasMarte. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('[data-nav]');
+            const pages = document.querySelectorAll('.page-section');
+            const menuToggleBtn = document.getElementById('menu-toggle-btn');
+            const menuOverlay = document.getElementById('new-menu-overlay');
+            const iconPlus = document.getElementById('icon-plus');
+            const iconMinus = document.getElementById('icon-minus');
+            const footerAccordionBtns = document.querySelectorAll('.footer-accordion-btn');
+
+            function showPage(pageName) {
+                // Hide all pages
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+
+                // Show the target page
+                const targetPage = document.querySelector(`.page-section[data-page="${pageName}"]`);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                }
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+
+                // Close mobile menu if open and update accessibility attributes
+                if (menuOverlay) menuOverlay.classList.remove('menu-open');
+                if (iconPlus) iconPlus.classList.remove('hidden');
+                if (iconMinus) iconMinus.classList.add('hidden');
+                document.body.style.overflow = 'auto'; // Restore scroll
+                if (menuToggleBtn) {
+                    menuToggleBtn.setAttribute('aria-expanded', 'false');
+                    menuToggleBtn.setAttribute('title', 'Open menu');
+                }
+            }
+
+            // Add click listener to all nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageName = this.getAttribute('data-nav');
+
+                    // Special case for 'About' link in footer, scroll to section
+                    if (pageName === 'home' && this.closest('footer')) {
+                        showPage('home');
+                        // Need a slight delay for page to become active before scrolling
+                        setTimeout(() => {
+                            document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                        }, 100);
+                    } else {
+                        showPage(pageName);
+                    }
+
+                    // Close any open footer accordions
+                    footerAccordionBtns.forEach(btn => {
+                        btn.classList.remove('open');
+                        if (btn.nextElementSibling) btn.nextElementSibling.classList.add('hidden');
+                    });
+                });
+            });
+
+            // Toggle fullscreen menu
+            if (menuToggleBtn) {
+                menuToggleBtn.addEventListener('click', function() {
+                    const isMenuOpen = menuOverlay && menuOverlay.classList.contains('menu-open');
+                    if (isMenuOpen) {
+                        if (menuOverlay) menuOverlay.classList.remove('menu-open');
+                        if (iconPlus) iconPlus.classList.remove('hidden');
+                        if (iconMinus) iconMinus.classList.add('hidden');
+                        document.body.style.overflow = 'auto'; // Restore scroll
+                        menuToggleBtn.setAttribute('aria-expanded', 'false');
+                        menuToggleBtn.setAttribute('title', 'Open menu');
+                    } else {
+                        if (menuOverlay) menuOverlay.classList.add('menu-open');
+                        if (iconPlus) iconPlus.classList.add('hidden');
+                        if (iconMinus) iconMinus.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden'; // Prevent body scroll
+                        menuToggleBtn.setAttribute('aria-expanded', 'true');
+                        menuToggleBtn.setAttribute('title', 'Close menu');
+                    }
+                });
+            }
+
+            // Footer Accordion Logic
+            footerAccordionBtns.forEach(button => {
+                button.addEventListener('click', () => {
+                    const content = button.nextElementSibling;
+                    const icon = button.querySelector('span');
+
+                    if (content.classList.contains('hidden')) {
+                        // Open this one
+                        content.classList.remove('hidden');
+                        button.classList.add('open');
+                        if (icon) icon.textContent = '−';
+                    } else {
+                        // Close this one
+                        content.classList.add('hidden');
+                        button.classList.remove('open');
+                        if (icon) icon.textContent = '+';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
