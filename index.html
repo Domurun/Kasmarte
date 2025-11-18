@@ -11,7 +11,7 @@
     <!-- Google Fonts Import -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Oswald:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Oswald:wght@300;400&display=swap" rel="stylesheet">
     
     <!-- Custom Tailwind Configuration -->
     <script>
@@ -94,8 +94,8 @@
       /* Basic responsive grid utilities used by the page */
       .grid{display:grid;gap:1.5rem}
       .grid-cols-1{grid-template-columns:1fr}
-      @media(min-width:768px){ .md\\:grid-cols-2{grid-template-columns:repeat(2,1fr)} }
-      @media(min-width:1024px){ .lg\\:grid-cols-3{grid-template-columns:repeat(3,1fr)} .lg\\:grid-cols-4{grid-template-columns:repeat(4,1fr)} }
+      @media(min-width:768px){ .md\:grid-cols-2{grid-template-columns:repeat(2,1fr)} }
+      @media(min-width:1024px){ .lg\:grid-cols-3{grid-template-columns:repeat(3,1fr)} .lg\:grid-cols-4{grid-template-columns:repeat(4,1fr)} }
 
       /* Video hero */
       .relative{position:relative}
@@ -103,14 +103,14 @@
       .inset-0{top:0;right:0;bottom:0;left:0}
       .object-cover{object-fit:cover}
       .h-\[70vh\]{height:70vh}
-      @media(min-width:768px){ .md\\:h-screen{height:100vh} }
+      @media(min-width:768px){ .md\:h-screen{height:100vh} }
       .hero-overlay{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:1.5rem}
 
       /* Heading sizes */
       .font-header-dramatic{font-family:'Oswald',sans-serif;font-weight:300;text-transform:uppercase;letter-spacing:.05em}
       h1.font-header-dramatic{margin:0}
       h1.text-6xl{font-size:3.5rem;line-height:1}
-      @media(min-width:768px){ h1.md\\:text-9xl{font-size:6rem} }
+      @media(min-width:768px){ h1.md\:text-9xl{font-size:6rem} }
 
       /* Buttons */
       .button{
@@ -172,15 +172,17 @@
           transform: rotate(45deg);
       }
 
-      /* Menu Overlay Transition (duplicate-safe rule) */
+      /* Menu Overlay Transition */
       #new-menu-overlay {
           opacity: 0;
           visibility: hidden;
-          transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+          transform: translateY(-10px); /* Add a slight slide effect */
+          transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease-in-out;
       }
       #new-menu-overlay.menu-open {
           opacity: 1;
           visibility: visible;
+          transform: translateY(0);
       }
 
       /* Fix video hero styling */
@@ -203,48 +205,68 @@
       section {
           width: 100%;
       }
+      
+      /* Animation */
+      .animate-fade-in {
+          animation: fadeIn 0.5s ease-out forwards;
+      }
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
     </style>
 </head>
 <body class="bg-brand-white font-body text-brand-black">
 
-    <!-- New Fullscreen Menu (Hidden by default) -->
-    <div id="new-menu-overlay" class="fixed top-0 left-0 w-full h-screen bg-brand-white z-40 flex items-center justify-center">
-        <ul class="flex flex-col items-center space-y-12">
+    <!-- Compact Menu Card (Hidden by default) -->
+    <div id="new-menu-overlay" class="fixed top-24 right-4 md:right-10 w-64 bg-brand-white z-40 shadow-2xl border border-gray-200 rounded-xl p-6">
+        <!-- Close Button inside Menu -->
+        <button id="menu-close-inner" class="absolute top-3 right-3 text-brand-black hover:opacity-50 transition-opacity p-1" aria-label="Close menu">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <ul class="flex flex-col items-center space-y-6 mt-2">
             <!-- Home Link -->
             <li>
-                <a href="#" class="hover:opacity-70 transition-opacity duration-300" data-nav="home" title="Home" aria-label="Home">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity duration-300 group" data-nav="home" title="Home" aria-label="Home">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 11.5L12 4l9 7.5M5 21h14a1 1 0 001-1V11.5L12 5 4 11.5V20a1 1 0 001 1z"/>
                     </svg>
+                    <span class="text-xs font-header uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Home</span>
                 </a>
             </li>
 
             <!-- Profile Link -->
             <li>
-                <a href="#" class="hover:opacity-70 transition-opacity duration-300" data-nav="profile" title="Profile" aria-label="Profile">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity duration-300 group" data-nav="profile" title="Profile" aria-label="Profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16 11c1.657 0 3-1.567 3-3.5S17.657 4 16 4s-3 1.567-3 3.5S14.343 11 16 11zM6 20a6 6 0 0112 0" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 14c-4 0-6 2-6 6" opacity="0"/>
                     </svg>
+                    <span class="text-xs font-header uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Profile</span>
                 </a>
             </li>
 
             <!-- Male Link -->
             <li>
-                <a href="#" class="hover:opacity-70 transition-opacity duration-300" data-nav="men" title="Men" aria-label="Men">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity duration-300 group" data-nav="men" title="Men" aria-label="Men">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14 3h7v7M21 3l-8.5 8.5M7 21a6 6 0 100-12 6 6 0 000 12z" />
                     </svg>
+                    <span class="text-xs font-header uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Uomo</span>
                 </a>
             </li>
 
             <!-- Female Link -->
             <li>
-                <a href="#" class="hover:opacity-70 transition-opacity duration-300" data-nav="women" title="Women" aria-label="Women">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity duration-300 group" data-nav="women" title="Women" aria-label="Women">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a5 5 0 00-5 5c0 2.5 2 4.5 4.5 4.5S16 9.5 16 7a5 5 0 00-4-5zM12 11v9" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 20h6" />
                     </svg>
+                    <span class="text-xs font-header uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">Donna</span>
                 </a>
             </li>
         </ul>
@@ -259,10 +281,11 @@
                 <!-- intentionally empty to keep logo centered -->
             </div>
 
-            <!-- Center: Logo 'M' -->
-            <div class="flex justify-center">
-                <a href="#" class="font-header text-4xl font-light tracking-wider" data-nav="home">
-                    M
+            <!-- Center: Logo -->
+            <div class="flex justify-center items-center">
+                <a href="#" class="block hover:opacity-80 transition-opacity duration-300" data-nav="home" aria-label="KasMarte Home">
+                    <!-- Inserted SVG Logo with Black Color Matrix filter for visibility -->
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="102" zoomAndPan="magnify" viewBox="0 0 76.5 30.000001" height="40" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><filter x="0%" y="0%" width="100%" height="100%" id="f27245a18a"><feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" color-interpolation-filters="sRGB"/></filter><filter x="0%" y="0%" width="100%" height="100%" id="ec5b74169a"><feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.2126 0.7152 0.0722 0 0" color-interpolation-filters="sRGB"/></filter><clipPath id="1895e35f53"><path d="M 1 9.394531 L 75 9.394531 L 75 19.554688 L 1 19.554688 Z M 1 9.394531 " clip-rule="nonzero"/></clipPath><mask id="0909729497"><g filter="url(#f27245a18a)"><g filter="url(#ec5b74169a)" transform="matrix(0.1238, 0, 0, 0.123803, 0.973333, -34.239974)"><image x="0" y="0" width="598" xlink:href="data:image/png;base64,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" height="768" preserveAspectRatio="xMidYMid meet"/></g></g></mask></defs><g clip-path="url(#1895e35f53)"><g mask="url(#0909729497)"><g transform="matrix(0.1238, 0, 0, 0.123803, 0.973333, -34.239974)"><image x="0" y="0" width="598" xlink:href="data:image/png;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGB3+f8BVqy6KwxrZbgAAAAASUVORK5CYII=" height="768" preserveAspectRatio="xMidYMid meet"/></g></g></g></svg>
                 </a>
             </div>
             
@@ -280,7 +303,7 @@
                     </svg>
                 </button>
 
-                <button class="hover:opacity-70 transition-opacity duration-300" aria-label="Open shopping cart" title="Open shopping cart">
+                <button id="cart-btn" class="hover:opacity-70 transition-opacity duration-300" aria-label="Open shopping cart" title="Open shopping cart">
                     <!-- Cart Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -300,16 +323,16 @@
         <section class="page-section active" data-page="home">
             
             <!-- Video Hero Section -->
-            <div class="relative h-[70vh] md:h-screen w-full overflow-hidden">
+            <div class="relative h-[70vh] md:h-screen w-full overflow-hidden bg-black">
                 <!-- Video Background -->
-                <video autoplay loop muted class="absolute top-0 left-0 w-full h-full object-cover">
-                    <!-- Updated video to a running horse in black and white -->
-                    <source src="/assets/video/Video_Black_and_White_Conversion.mp4" type="video/mp4">
+                <video autoplay loop muted playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-80">
+                    <!-- Using a stock fashion video as placeholder -->
+                    <source src="https://videos.pexels.com/video-files/3754234/3754234-uhd_2560_1440_25fps.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
                 
                 <!-- Text & Button Overlay -->
-                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
                     <h1 class="font-header-dramatic text-6xl md:text-9xl lg:text-[10rem] leading-none text-brand-white video-overlay-text mb-4">
                         KasMarte
                     </h1>
@@ -328,7 +351,7 @@
                 <div class="max-w-3xl mx-auto font-body text-lg leading-relaxed space-y-6">
                     <p class="text-xl text-center">Fatto a mano nel nostro studio. Uniamo la tradizione artigianale con un design moderno e un prezzo giusto.</p>
                     <div class="bg-brand-white rounded-lg shadow-sm overflow-hidden border border-brand-black border-opacity-10">
-                        <img src="https://placehold.co/1200x800/000/FFF?text=Artigianato" alt="Craftsmanship in studio" class="w-full h-auto object-cover">
+                        <img src="https://images.unsplash.com/photo-1603400521630-9f2de124b33b?auto=format&fit=crop&w=1200&q=80" alt="Craftsmanship in studio" class="w-full h-auto object-cover">
                     </div>
                     <p>Our philosophy is simple: create beautiful, high-quality garments that last, and offer them at a price that respects both the maker and the customer. We bypass traditional luxury markups by selling directly to you.</p>
                     <p>Each piece is designed and crafted in our small studio in Florence, where we focus on natural materials, precise tailoring, and the quiet confidence of a perfect fit.</p>
@@ -340,34 +363,31 @@
                 <h3 class="font-header-dramatic text-4xl text-center mb-12 container mx-auto">Lookbook</h3>
                 <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Product 1 -->
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="/img/Men's Plain Front Button Long Sleeve Jacket And Long Pants Set.jpeg" 
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=800&q=80" 
                                  alt="Desaturated photo of a tailored jacket"
-                                 class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">La Giacca</h4>
-                        <p class="font-body text-brand-black opacity-70">$280</p>
                     </div>
                     <!-- Product 2 -->
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="/img/مجموعة قميص أزرار أمامية بجيب وبنطلون كاجوال للرجال، ملابس خريفية، إطلالة مريحة قطعتان.jpeg" 
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80" 
                                  alt="Desaturated photo of a leather bag"
-                                 class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">La Borsa</h4>
-                        <p class="font-body text-brand-black opacity-70">$195</p>
                     </div>
                     <!-- Product 3 -->
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="/img/e5e3ffb5-5dd5-4a4a-acb7-6c9d27ba8f5a.avif" 
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=800&q=80" 
                                  alt="Desaturated photo of leather shoes"
-                                 class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">Le Scarpe</h4>
-                        <p class="font-body text-brand-black opacity-70">$220</p>
                     </div>
                 </div>
             </section>
@@ -379,30 +399,30 @@
                 <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">Uomo</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Placeholder products -->
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="https://placehold.co/600x800/000/FFF?text=Camicia" alt="Men's Shirt" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80" alt="Men's Shirt" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">Camicia di Lino</h4>
                         <p class="font-body text-brand-black opacity-70">$120</p>
                     </div>
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="https://placehold.co/600x800/000/FFF?text=Pantaloni" alt="Men's Trousers" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80" alt="Men's Trousers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">Pantaloni Chino</h4>
                         <p class="font-body text-brand-black opacity-70">$160</p>
                     </div>
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="https://placehold.co/600x800/000/FFF?text=Maglione" alt="Men's Sweater" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1610652492500-ded49ceeb378?auto=format&fit=crop&w=800&q=80" alt="Men's Sweater" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">Maglione di Cachemire</h4>
                         <p class="font-body text-brand-black opacity-70">$250</p>
                     </div>
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="https://placehold.co/600x800/000/FFF?text=Giacca" alt="Men's Jacket" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1559551409-dadc959f76b8?auto=format&fit=crop&w=800&q=80" alt="Men's Jacket" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">Giacca da Lavoro</h4>
                         <p class="font-body text-brand-black opacity-70">$290</p>
@@ -417,30 +437,30 @@
                 <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">Donna</h1>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Re-using products from home for demo -->
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="/img/Men's Plain Front Button Long Sleeve Jacket And Long Pants Set.jpeg" alt="Jacket" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=800&q=80" alt="Jacket" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">La Giacca</h4>
                         <p class="font-body text-brand-black opacity-70">$280</p>
                     </div>
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="https://placehold.co/600x800/000/FFF?text=La+Borsa" alt="Bag" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80" alt="Bag" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">La Borsa</h4>
                         <p class="font-body text-brand-black opacity-70">$195</p>
                     </div>
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="https://placehold.co/600x800/000/FFF?text=Le+Scarpe" alt="Shoes" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80" alt="Shoes" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">Le Scarpe</h4>
                         <p class="font-body text-brand-black opacity-70">$220</p>
                     </div>
-                    <div class="group">
-                        <div class="bg-brand-white rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4">
-                            <img src="https://placehold.co/600x800/000/FFF?text=Abito" alt="Dress" class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out">
+                    <div class="group cursor-pointer">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm border border-brand-black border-opacity-10 mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80" alt="Dress" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out grayscale hover:grayscale-0">
                         </div>
                         <h4 class="font-body font-bold text-lg">Abito di Seta</h4>
                         <p class="font-body text-brand-black opacity-70">$310</p>
@@ -474,6 +494,257 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PROFILE / AUTH PAGE ===== -->
+        <section class="page-section" data-page="profile">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <div class="max-w-md mx-auto">
+                    <!-- Dynamic Title -->
+                    <h1 id="auth-title" class="font-header-dramatic text-5xl md:text-6xl text-center mb-12">Accedi</h1>
+                    
+                    <div class="bg-brand-white p-8 rounded-lg shadow-sm border border-brand-black border-opacity-5">
+                        
+                        <!-- LOGIN FORM -->
+                        <form id="login-form" class="space-y-6 animate-fade-in">
+                            <div>
+                                <label for="login-email" class="block text-xs font-bold uppercase tracking-widest mb-2">Email</label>
+                                <input type="email" id="login-email" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="email@example.com">
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="login-password" class="block text-xs font-bold uppercase tracking-widest">Password</label>
+                                    <button type="button" id="btn-forgot-pass" class="text-xs text-gray-500 hover:text-brand-black underline">Forgot?</button>
+                                </div>
+                                <input type="password" id="login-password" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="••••••••">
+                            </div>
+                            <button type="button" class="w-full bg-brand-black text-brand-white font-bold uppercase tracking-widest py-4 hover:opacity-90 transition-opacity">
+                                Sign In
+                            </button>
+                            
+                            <!-- Social Divider -->
+                            <div class="relative flex py-2 items-center">
+                                <div class="flex-grow border-t border-gray-200"></div>
+                                <span class="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase">Or continue with</span>
+                                <div class="flex-grow border-t border-gray-200"></div>
+                            </div>
+
+                            <!-- Social Buttons -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <button type="button" class="flex items-center justify-center border border-gray-300 py-2 hover:bg-gray-50 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                                    Google
+                                </button>
+                                <button type="button" class="flex items-center justify-center border border-gray-300 py-2 hover:bg-gray-50 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.78 1.18-.19 2.31-.89 3.51-.84 1.54.06 2.77.79 3.49 1.89-3.38 1.68-2.82 6.12.64 7.53-.54 1.65-1.35 3.31-2.72 3.61zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                                    Apple
+                                </button>
+                            </div>
+
+                            <div class="text-center mt-6 text-sm">
+                                <span class="text-gray-500">New to KasMarte?</span>
+                                <button type="button" id="btn-show-register" class="font-bold ml-1 underline hover:text-gray-600">Create an account</button>
+                            </div>
+                        </form>
+
+                        <!-- REGISTER FORM (Hidden by default) -->
+                        <form id="register-form" class="space-y-6 hidden animate-fade-in">
+                             <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label for="reg-first" class="block text-xs font-bold uppercase tracking-widest mb-2">First Name</label>
+                                    <input type="text" id="reg-first" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="Ava">
+                                </div>
+                                <div>
+                                    <label for="reg-last" class="block text-xs font-bold uppercase tracking-widest mb-2">Last Name</label>
+                                    <input type="text" id="reg-last" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="Doe">
+                                </div>
+                             </div>
+                            <div>
+                                <label for="reg-email" class="block text-xs font-bold uppercase tracking-widest mb-2">Email</label>
+                                <input type="email" id="reg-email" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="email@example.com">
+                            </div>
+                            <div>
+                                <label for="reg-password" class="block text-xs font-bold uppercase tracking-widest mb-2">Password</label>
+                                <input type="password" id="reg-password" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="Create a password">
+                            </div>
+                            
+                            <button type="button" class="w-full bg-brand-black text-brand-white font-bold uppercase tracking-widest py-4 hover:opacity-90 transition-opacity">
+                                Create Account
+                            </button>
+
+                            <!-- Social Divider -->
+                            <div class="relative flex py-2 items-center">
+                                <div class="flex-grow border-t border-gray-200"></div>
+                                <span class="flex-shrink-0 mx-4 text-gray-400 text-xs uppercase">Or sign up with</span>
+                                <div class="flex-grow border-t border-gray-200"></div>
+                            </div>
+
+                             <!-- Social Buttons (Repeated) -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <button type="button" class="flex items-center justify-center border border-gray-300 py-2 hover:bg-gray-50 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                                    Google
+                                </button>
+                                <button type="button" class="flex items-center justify-center border border-gray-300 py-2 hover:bg-gray-50 transition-colors">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.78 1.18-.19 2.31-.89 3.51-.84 1.54.06 2.77.79 3.49 1.89-3.38 1.68-2.82 6.12.64 7.53-.54 1.65-1.35 3.31-2.72 3.61zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                                    Apple
+                                </button>
+                            </div>
+
+                            <div class="text-center mt-6 text-sm">
+                                <span class="text-gray-500">Already have an account?</span>
+                                <button type="button" id="btn-show-login" class="font-bold ml-1 underline hover:text-gray-600">Sign In</button>
+                            </div>
+                        </form>
+
+                        <!-- FORGOT PASSWORD FORM (Hidden by default) -->
+                        <form id="forgot-form" class="space-y-6 hidden animate-fade-in">
+                            <p class="text-sm text-gray-600 mb-4">Enter the email address associated with your account and we'll send you a link to reset your password.</p>
+                            <div>
+                                <label for="forgot-email" class="block text-xs font-bold uppercase tracking-widest mb-2">Email</label>
+                                <input type="email" id="forgot-email" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none" placeholder="email@example.com">
+                            </div>
+                            
+                            <button type="button" class="w-full bg-brand-black text-brand-white font-bold uppercase tracking-widest py-4 hover:opacity-90 transition-opacity">
+                                Send Recovery Link
+                            </button>
+
+                            <div class="text-center mt-6 text-sm">
+                                <button type="button" id="btn-back-to-login" class="font-bold underline hover:text-gray-600">Back to Sign In</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CHECKOUT PAGE ===== -->
+        <section class="page-section" data-page="checkout">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <h1 class="font-header-dramatic text-5xl md:text-6xl text-center mb-12">Checkout</h1>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
+                    <!-- Left Column: Forms -->
+                    <div class="lg:col-span-2 space-y-12">
+                        
+                        <!-- Contact & Shipping -->
+                        <div class="animate-fade-in">
+                            <h2 class="font-header text-2xl mb-6 uppercase tracking-wider">Shipping Address</h2>
+                            <form class="space-y-6">
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-2">First Name</label>
+                                        <input type="text" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="Ava">
+                                    </div>
+                                     <div class="col-span-2 md:col-span-1">
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-2">Last Name</label>
+                                        <input type="text" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="Doe">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase tracking-widest mb-2">Address</label>
+                                    <input type="text" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="123 Fashion Ave">
+                                </div>
+                                <div class="grid grid-cols-2 gap-6">
+                                     <div>
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-2">City</label>
+                                        <input type="text" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="New York">
+                                    </div>
+                                     <div>
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-2">Postal Code</label>
+                                        <input type="text" class="w-full p-3 bg-gray-50 border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="10001">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Payment -->
+                        <div class="animate-fade-in" style="animation-delay: 0.1s;">
+                            <h2 class="font-header text-2xl mb-6 uppercase tracking-wider">Payment</h2>
+                            <div class="p-6 border border-gray-200 rounded bg-gray-50">
+                                <div class="mb-4">
+                                     <label class="block text-xs font-bold uppercase tracking-widest mb-2">Card Number</label>
+                                     <input type="text" class="w-full p-3 bg-white border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="0000 0000 0000 0000">
+                                </div>
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-2">Expiry</label>
+                                        <input type="text" class="w-full p-3 bg-white border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="MM/YY">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase tracking-widest mb-2">CVV</label>
+                                        <input type="text" class="w-full p-3 bg-white border border-gray-200 focus:border-brand-black focus:outline-none transition-colors" placeholder="123">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Order Summary -->
+                    <div class="lg:col-span-1 animate-fade-in" style="animation-delay: 0.2s;">
+                        <div class="bg-brand-white p-8 sticky top-32 border border-brand-black border-opacity-10 shadow-sm">
+                            <h2 class="font-header text-xl mb-6 uppercase tracking-wider">Order Summary</h2>
+                            
+                            <!-- Item List (Dummy) -->
+                            <div id="checkout-items-container" class="space-y-6 mb-8 border-b border-gray-200 pb-8">
+                                <div class="flex gap-4 relative item-row" data-price="280">
+                                    <div class="w-20 h-24 bg-gray-100 overflow-hidden flex-shrink-0">
+                                        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover grayscale">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <h4 class="font-body font-bold text-sm">La Giacca</h4>
+                                        <p class="text-xs text-gray-500 mb-1">Size: M</p>
+                                        <p class="font-bold text-sm">$280</p>
+                                    </div>
+                                    <button class="remove-item-btn text-gray-400 hover:text-red-600 transition-colors absolute top-0 right-0" title="Remove item">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                 <div class="flex gap-4 relative item-row" data-price="195">
+                                    <div class="w-20 h-24 bg-gray-100 overflow-hidden flex-shrink-0">
+                                        <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover grayscale">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <h4 class="font-body font-bold text-sm">La Borsa</h4>
+                                        <p class="text-xs text-gray-500 mb-1">Color: Black</p>
+                                        <p class="font-bold text-sm">$195</p>
+                                    </div>
+                                    <button class="remove-item-btn text-gray-400 hover:text-red-600 transition-colors absolute top-0 right-0" title="Remove item">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Totals -->
+                            <div class="space-y-3 mb-8 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Subtotal</span>
+                                    <span id="checkout-subtotal">$475</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Shipping</span>
+                                    <span class="text-green-600">Free</span>
+                                </div>
+                                <div class="flex justify-between font-bold text-xl pt-4 border-t border-gray-200 mt-4">
+                                    <span>Total</span>
+                                    <span id="checkout-total">$475</span>
+                                </div>
+                            </div>
+
+                            <button class="w-full bg-brand-black text-brand-white font-body font-bold text-sm py-4 px-6 rounded-md hover:bg-opacity-80 transition-colors duration-300 uppercase tracking-wider">
+                                Place Order
+                            </button>
+                            
+                            <p class="text-xs text-center text-gray-400 mt-4">Secure 256-bit SSL Encryption.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -565,7 +836,101 @@
             const menuOverlay = document.getElementById('new-menu-overlay');
             const iconPlus = document.getElementById('icon-plus');
             const iconMinus = document.getElementById('icon-minus');
+            const menuCloseInner = document.getElementById('menu-close-inner'); 
             const footerAccordionBtns = document.querySelectorAll('.footer-accordion-btn');
+            const cartBtn = document.getElementById('cart-btn'); 
+
+            // Profile Page Auth Toggle Logic
+            const authTitle = document.getElementById('auth-title');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const forgotForm = document.getElementById('forgot-form');
+            
+            const btnShowRegister = document.getElementById('btn-show-register');
+            const btnShowLogin = document.getElementById('btn-show-login');
+            const btnForgotPass = document.getElementById('btn-forgot-pass');
+            const btnBackToLogin = document.getElementById('btn-back-to-login');
+
+            function switchAuthView(view) {
+                // Hide all forms
+                if(loginForm) loginForm.classList.add('hidden');
+                if(registerForm) registerForm.classList.add('hidden');
+                if(forgotForm) forgotForm.classList.add('hidden');
+                
+                // Show requested view
+                if (view === 'register' && registerForm) {
+                    registerForm.classList.remove('hidden');
+                    if(authTitle) authTitle.textContent = 'Registrati';
+                } else if (view === 'forgot' && forgotForm) {
+                    forgotForm.classList.remove('hidden');
+                    if(authTitle) authTitle.textContent = 'Recupera';
+                } else if(loginForm) {
+                    loginForm.classList.remove('hidden');
+                    if(authTitle) authTitle.textContent = 'Accedi';
+                }
+            }
+
+            if (btnShowRegister) {
+                btnShowRegister.addEventListener('click', () => switchAuthView('register'));
+            }
+            if (btnShowLogin) {
+                btnShowLogin.addEventListener('click', () => switchAuthView('login'));
+            }
+            if (btnForgotPass) {
+                btnForgotPass.addEventListener('click', () => switchAuthView('forgot'));
+            }
+            if (btnBackToLogin) {
+                btnBackToLogin.addEventListener('click', () => switchAuthView('login'));
+            }
+            
+            // Cart Button Logic - Go to Checkout
+            if (cartBtn) {
+                cartBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showPage('checkout');
+                });
+            }
+
+            // Checkout Remove Item Logic
+            const checkoutItemsContainer = document.getElementById('checkout-items-container');
+            const subtotalEl = document.getElementById('checkout-subtotal');
+            const totalEl = document.getElementById('checkout-total');
+
+            if (checkoutItemsContainer) {
+                checkoutItemsContainer.addEventListener('click', function(e) {
+                    // Find closest button if clicked on icon path
+                    const btn = e.target.closest('.remove-item-btn');
+                    if (btn) {
+                        const itemRow = btn.closest('.item-row');
+                        if (itemRow) {
+                            // Fade out effect
+                            itemRow.style.transition = 'opacity 0.3s ease, height 0.3s ease';
+                            itemRow.style.opacity = '0';
+                            
+                            setTimeout(() => {
+                                itemRow.remove();
+                                updateCheckoutTotals();
+                            }, 300);
+                        }
+                    }
+                });
+            }
+
+            function updateCheckoutTotals() {
+                const items = document.querySelectorAll('.item-row');
+                let total = 0;
+                
+                items.forEach(item => {
+                    // Check if item is still attached to DOM and visible
+                    if (item.parentElement) {
+                        total += parseInt(item.getAttribute('data-price'));
+                    }
+                });
+
+                if (subtotalEl) subtotalEl.textContent = '$' + total;
+                if (totalEl) totalEl.textContent = '$' + total;
+            }
+
 
             function showPage(pageName) {
                 // Hide all pages
@@ -582,14 +947,27 @@
                 // Scroll to top
                 window.scrollTo(0, 0);
 
-                // Close mobile menu if open and update accessibility attributes
+                // Close menu if open (helper function)
+                closeMenu();
+            }
+
+            function closeMenu() {
                 if (menuOverlay) menuOverlay.classList.remove('menu-open');
                 if (iconPlus) iconPlus.classList.remove('hidden');
                 if (iconMinus) iconMinus.classList.add('hidden');
-                document.body.style.overflow = 'auto'; // Restore scroll
                 if (menuToggleBtn) {
                     menuToggleBtn.setAttribute('aria-expanded', 'false');
                     menuToggleBtn.setAttribute('title', 'Open menu');
+                }
+            }
+
+            function openMenu() {
+                if (menuOverlay) menuOverlay.classList.add('menu-open');
+                if (iconPlus) iconPlus.classList.add('hidden');
+                if (iconMinus) iconMinus.classList.remove('hidden');
+                if (menuToggleBtn) {
+                    menuToggleBtn.setAttribute('aria-expanded', 'true');
+                    menuToggleBtn.setAttribute('title', 'Close menu');
                 }
             }
 
@@ -618,25 +996,22 @@
                 });
             });
 
-            // Toggle fullscreen menu
+            // Toggle menu with main header button
             if (menuToggleBtn) {
                 menuToggleBtn.addEventListener('click', function() {
                     const isMenuOpen = menuOverlay && menuOverlay.classList.contains('menu-open');
                     if (isMenuOpen) {
-                        if (menuOverlay) menuOverlay.classList.remove('menu-open');
-                        if (iconPlus) iconPlus.classList.remove('hidden');
-                        if (iconMinus) iconMinus.classList.add('hidden');
-                        document.body.style.overflow = 'auto'; // Restore scroll
-                        menuToggleBtn.setAttribute('aria-expanded', 'false');
-                        menuToggleBtn.setAttribute('title', 'Open menu');
+                        closeMenu();
                     } else {
-                        if (menuOverlay) menuOverlay.classList.add('menu-open');
-                        if (iconPlus) iconPlus.classList.add('hidden');
-                        if (iconMinus) iconMinus.classList.remove('hidden');
-                        document.body.style.overflow = 'hidden'; // Prevent body scroll
-                        menuToggleBtn.setAttribute('aria-expanded', 'true');
-                        menuToggleBtn.setAttribute('title', 'Close menu');
+                        openMenu();
                     }
+                });
+            }
+
+            // Listener for new inner close button
+            if (menuCloseInner) {
+                menuCloseInner.addEventListener('click', function() {
+                    closeMenu();
                 });
             }
 
