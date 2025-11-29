@@ -392,6 +392,100 @@
             </div>
         </section>
 
+        <section class="page-section" data-page="product-detail">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <div class="mb-8 text-sm"><a href="#" data-nav="store" class="text-gray-500">Store</a> <span class="mx-2">/</span> <span id="detail-breadcrumb-name" class="font-medium">Product</span></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
+                    <div class="bg-gray-50 rounded-lg overflow-hidden aspect-[3/4]"><img id="detail-image" src="" class="w-full h-full object-cover"></div>
+                    <div class="flex flex-col justify-center">
+                        <h1 id="detail-title" class="font-header-dramatic text-5xl mb-4">Product</h1>
+                        <p id="detail-price" class="text-2xl font-bold mb-8">$0.00</p>
+                        <p class="mb-8 text-gray-600">Crafted with the finest materials in our Florence atelier. Timeless elegance and modern utility.</p>
+                        
+                        <div class="mb-8">
+                            <div class="flex justify-between items-center mb-3">
+                                <label class="font-bold uppercase text-sm">Size</label>
+                                <button id="size-guide-trigger" class="text-xs underline text-gray-500">Size Guide</button>
+                            </div>
+                            <div class="flex gap-3 size-selector">
+                                <div class="relative"><input type="radio" name="size" id="size-s" class="peer sr-only"><label for="size-s" class="block w-12 h-12 flex items-center justify-center border border-gray-300 cursor-pointer text-sm">S</label></div>
+                                <div class="relative"><input type="radio" name="size" id="size-m" class="peer sr-only" checked><label for="size-m" class="block w-12 h-12 flex items-center justify-center border border-gray-300 cursor-pointer text-sm">M</label></div>
+                                <div class="relative"><input type="radio" name="size" id="size-l" class="peer sr-only"><label for="size-l" class="block w-12 h-12 flex items-center justify-center border border-gray-300 cursor-pointer text-sm">L</label></div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button id="add-to-cart-btn" class="flex-grow bg-brand-black text-brand-white font-bold text-sm py-4 rounded-md hover:opacity-80 transition uppercase tracking-wider">Add to Cart</button>
+                            <button id="detail-wishlist-btn" class="border border-gray-300 text-gray-400 hover:text-red-500 hover:border-red-200 rounded-md p-4 transition-colors" aria-label="Add to wishlist">
+                                <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="checkout">
+            <div class="container mx-auto px-6 py-12">
+                <h1 class="font-header-dramatic text-5xl text-center mb-12">Checkout</h1>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
+                    <div class="lg:col-span-2 space-y-12">
+                        <div>
+                            <h2 class="font-header text-2xl mb-6 uppercase">Shipping & Contact</h2>
+                            <form class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="First Name" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                                    <input type="text" placeholder="Last Name" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                                </div>
+                                <input type="email" placeholder="Email" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                                <input type="text" placeholder="Address" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="City" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                                    <input type="text" placeholder="Postal Code" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                                </div>
+                            </form>
+                        </div>
+
+                        <div>
+                            <h2 class="font-header text-2xl mb-6 uppercase">Payment</h2>
+                            <div class="space-y-4">
+                                <div class="border border-gray-200 rounded p-4 flex items-center gap-3 cursor-pointer hover:border-black">
+                                    <input type="radio" name="payment" id="pay-card" checked class="accent-black">
+                                    <label for="pay-card" class="font-bold flex-grow cursor-pointer">Credit / Debit Card</label>
+                                    <div class="flex gap-1"><div class="w-8 h-5 bg-gray-200 rounded"></div><div class="w-8 h-5 bg-gray-200 rounded"></div></div>
+                                </div>
+                                
+                                <div class="border border-gray-200 rounded p-4 flex items-center gap-3 cursor-pointer hover:border-paystack">
+                                    <input type="radio" name="payment" id="pay-paystack" class="accent-paystack">
+                                    <label for="pay-paystack" class="font-bold flex-grow cursor-pointer text-paystack">Paystack</label>
+                                    <svg class="h-6" viewBox="0 0 100 30" fill="none"><text x="0" y="20" font-weight="bold" fill="#0BA4DB" font-family="sans-serif">Paystack</text></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-1">
+                        <div class="bg-gray-50 p-8 rounded-lg border border-gray-200 sticky top-32">
+                            <h2 class="font-header text-xl mb-6 uppercase">Order Summary</h2>
+                            <div id="checkout-items-container" class="space-y-4 mb-6 border-b pb-6"></div>
+                            
+                            <div class="flex justify-between font-bold text-xl pt-2 mb-6">
+                                <span>Total</span>
+                                <span id="checkout-total">$0</span>
+                            </div>
+
+                            <div class="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6 flex gap-3 items-start">
+                                <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <p class="text-sm text-blue-800">Please note: Due to our handcrafted process, your order will be available for shipping in <strong>3 weeks</strong>.</p>
+                            </div>
+
+                            <button class="w-full bg-brand-black text-brand-white font-bold py-4 rounded-md hover:opacity-90 transition uppercase tracking-wider">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="border-t border-brand-black border-opacity-20 mt-12">
