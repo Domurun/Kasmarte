@@ -118,6 +118,9 @@
             <li><a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity" data-nav="lookbook" aria-label="Lookbook">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
             </a></li>
+            <li><a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity" data-nav="wishlist" aria-label="Wishlist">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+            </a></li>
             <li><a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity" data-nav="account" aria-label="Account">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
             </a></li>
@@ -148,6 +151,11 @@
             </div>
             
             <div class="flex items-center justify-end space-x-6">
+                <button id="wishlist-nav-btn" class="hidden md:block hover:opacity-60 transition-opacity relative" data-nav="wishlist" title="Wishlist">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                    <span id="wishlist-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center opacity-0 transition-opacity">0</span>
+                </button>
+
                 <a href="#" class="hidden md:block hover:opacity-60 transition-opacity" data-nav="account" aria-label="Account" title="Account">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
                 </a>
@@ -288,6 +296,15 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section class="page-section" data-page="wishlist">
+             <div class="container mx-auto px-6 py-12 md:py-20">
+                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-12">Your Wishlist</h1>
+                <div id="wishlist-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="col-span-full text-center text-gray-500 py-20">Your wishlist is empty.</div>
+                </div>
+             </div>
         </section>
 
         <section class="page-section" data-page="account">
@@ -523,8 +540,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             // State
             let cart = [];
+            let wishlistCount = 0;
             const pages = document.querySelectorAll('.page-section');
             const cartCountEl = document.getElementById('cart-count');
+            const wishlistCountEl = document.getElementById('wishlist-count');
             
             // --- Navigation Logic ---
             function showPage(pageName) {
@@ -591,14 +610,28 @@
             // --- Wishlist Logic ---
             function toggleWishlist(btn) {
                 const icon = btn.querySelector('svg');
+                let isAdded = false;
+
                 if (icon.classList.contains('heart-filled')) {
                     icon.classList.remove('heart-filled');
                     btn.classList.remove('text-red-500');
-                    btn.classList.add('text-gray-400');
+                    if(btn.classList.contains('text-gray-400')) { /* keep gray */ } else { btn.classList.add('text-gray-400'); }
+                    wishlistCount--;
                 } else {
                     icon.classList.add('heart-filled');
                     btn.classList.add('text-red-500');
                     btn.classList.remove('text-gray-400');
+                    wishlistCount++;
+                    isAdded = true;
+                }
+
+                if(wishlistCount < 0) wishlistCount = 0;
+                wishlistCountEl.textContent = wishlistCount;
+                
+                if(wishlistCount > 0) {
+                    wishlistCountEl.classList.remove('opacity-0');
+                } else {
+                    wishlistCountEl.classList.add('opacity-0');
                 }
             }
 
@@ -629,7 +662,7 @@
 
                 // Reset Detail Wishlist Button
                 const wishBtn = document.getElementById('detail-wishlist-btn');
-                // Simple reset state for demo
+                // Simple reset state for demo (in a real app, check if ID is in wishlist)
                 wishBtn.querySelector('svg').classList.remove('heart-filled');
                 wishBtn.classList.remove('text-red-500');
 
