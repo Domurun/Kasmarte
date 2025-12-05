@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KasMarte</title>
+    <title>KasMarte | Luxury Fashion & AI Stylist</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -19,6 +19,7 @@
                         'brand-black': '#000000',
                         'brand-white': '#FFFFFF',
                         'paystack': '#0BA4DB',
+                        'ai-accent': '#8b5cf6', // Violet for AI features
                     },
                     fontFamily: {
                         header: ['Oswald', 'sans-serif'], 
@@ -91,6 +92,25 @@
           .footer-accordion-btn span { display: none; }
           .footer-accordion-content { display: block !important; }
       }
+
+      /* AI Scanner Animation */
+      .scan-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #8b5cf6;
+        box-shadow: 0 0 10px #8b5cf6;
+        animation: scan 2s linear infinite;
+        opacity: 0;
+      }
+      .scanning .scan-line { opacity: 1; }
+      @keyframes scan {
+        0% { top: 0%; }
+        50% { top: 100%; }
+        100% { top: 0%; }
+      }
     </style>
 </head>
 <body class="bg-brand-white font-body text-brand-black">
@@ -99,6 +119,7 @@
         Please log in to continue.
     </div>
 
+    <!-- Size Guide Modal -->
     <div id="size-guide-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
         <div class="bg-brand-white w-full max-w-lg mx-4 md:mx-auto p-8 rounded-lg shadow-2xl relative">
             <button id="close-size-guide" class="absolute top-4 right-4 text-gray-500 hover:text-brand-black transition-colors">
@@ -120,6 +141,94 @@
         </div>
     </div>
 
+    <!-- AI Try-On Modal -->
+    <div id="ai-tryon-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
+        <div class="bg-brand-white w-full max-w-4xl mx-4 md:mx-auto rounded-lg shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+            <!-- Header -->
+            <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-ai-accent text-white flex items-center justify-center text-xs font-bold">AI</span>
+                    <h2 class="font-header-dramatic text-2xl">Virtual Fitting Room</h2>
+                </div>
+                <button id="close-ai-modal" class="text-gray-500 hover:text-brand-black transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="flex-grow overflow-y-auto p-6">
+                
+                <!-- Step 1: Upload -->
+                <div id="ai-step-upload" class="flex flex-col items-center justify-center h-full min-h-[400px]">
+                    <div class="text-center max-w-md">
+                        <div class="mx-auto w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2">Upload a Full Body Photo</h3>
+                        <p class="text-gray-500 mb-8 text-sm">For the best results, use a photo with good lighting and a simple background. Our AI will map the fabric to your body shape.</p>
+                        
+                        <label class="block w-full cursor-pointer bg-brand-black text-brand-white font-bold py-4 rounded-md hover:opacity-90 transition uppercase tracking-wider text-center">
+                            Select Photo
+                            <input type="file" id="ai-file-input" accept="image/*" class="hidden">
+                        </label>
+                        <p class="text-xs text-gray-400 mt-4">Protected by Privacy Policy. Images are processed locally.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2: Processing -->
+                <div id="ai-step-processing" class="hidden flex flex-col items-center justify-center h-full min-h-[400px]">
+                    <div class="relative w-64 h-80 bg-gray-200 rounded-lg overflow-hidden mb-6 scanning">
+                        <img id="ai-user-preview" class="w-full h-full object-cover opacity-80" src="">
+                        <div class="scan-line"></div>
+                        <div class="absolute inset-0 border-2 border-ai-accent opacity-50 rounded-lg"></div>
+                        <!-- Grid overlay for tech feel -->
+                        <div class="absolute inset-0" style="background-image: radial-gradient(circle, #8b5cf6 1px, transparent 1px); background-size: 20px 20px; opacity: 0.2;"></div>
+                    </div>
+                    <h3 id="ai-status-text" class="font-header-dramatic text-2xl animate-pulse">Scanning Body Dimensions...</h3>
+                </div>
+
+                <!-- Step 3: Result -->
+                <div id="ai-step-result" class="hidden h-full">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
+                        <div class="relative rounded-lg overflow-hidden bg-gray-100">
+                            <span class="absolute top-4 left-4 bg-black text-white text-xs font-bold px-2 py-1 z-10">YOU</span>
+                            <img id="ai-result-user" class="w-full h-full object-cover" src="">
+                            <!-- Overlay Mockup -->
+                            <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded shadow text-center">
+                                <p class="text-xs text-gray-500 uppercase">Fit Score</p>
+                                <p class="font-bold text-ai-accent">98% Match</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col justify-center space-y-6">
+                            <div>
+                                <h3 class="font-header-dramatic text-3xl mb-2">Looks Good!</h3>
+                                <p class="text-gray-600">Based on your measurements, the <span id="ai-result-size" class="font-bold">Size M</span> offers the ideal drape for this silhouette.</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                <h4 class="font-bold text-sm mb-2">AI Stylist Notes:</h4>
+                                <ul class="text-sm text-gray-600 space-y-2 list-disc pl-4">
+                                    <li>Shoulders align perfectly with the cut.</li>
+                                    <li>Fabric falls naturally without bunching.</li>
+                                    <li>Length is optimal for your height.</li>
+                                </ul>
+                            </div>
+
+                            <button id="ai-add-to-cart" class="w-full bg-brand-black text-brand-white font-bold py-3 rounded-md hover:opacity-90 transition uppercase tracking-wider">
+                                Add This Look to Cart
+                            </button>
+                            <button id="ai-try-another" class="w-full border border-gray-300 text-gray-600 font-bold py-3 rounded-md hover:bg-gray-50 transition uppercase tracking-wider text-xs">
+                                Try Another Photo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
     <div id="new-menu-overlay" class="bg-brand-white z-50">
         <button id="menu-close-inner" class="absolute top-6 right-6 text-brand-black hover:opacity-50 transition-opacity p-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -422,12 +531,27 @@
                             </div>
                         </div>
 
-                        <div class="flex gap-4">
-                            <button id="add-to-cart-btn" class="flex-grow bg-brand-black text-brand-white font-bold text-sm py-4 rounded-md hover:opacity-80 transition uppercase tracking-wider">Add to Cart</button>
-                            <button id="detail-wishlist-btn" class="border border-gray-300 text-gray-400 hover:text-red-500 hover:border-red-200 rounded-md p-4 transition-colors" aria-label="Add to wishlist">
-                                <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                        <div class="flex flex-col gap-4">
+                            <div class="flex gap-4">
+                                <button id="add-to-cart-btn" class="flex-grow bg-brand-black text-brand-white font-bold text-sm py-4 rounded-md hover:opacity-80 transition uppercase tracking-wider">Add to Cart</button>
+                                <button id="detail-wishlist-btn" class="border border-gray-300 text-gray-400 hover:text-red-500 hover:border-red-200 rounded-md p-4 transition-colors" aria-label="Add to wishlist">
+                                    <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                                </button>
+                            </div>
+                            <!-- AI Button -->
+                            <button id="ai-trigger-btn" class="w-full border-2 border-ai-accent text-ai-accent hover:bg-ai-accent hover:text-white font-bold text-sm py-3 rounded-md transition uppercase tracking-wider flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                Virtual Try-On (AI Stylist)
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Related Products Section -->
+                <div class="mt-20 border-t border-gray-100 pt-16">
+                    <h3 class="font-header-dramatic text-3xl text-center mb-12">You May Also Like</h3>
+                    <div id="related-products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- JS Injected Items -->
                     </div>
                 </div>
             </div>
@@ -778,7 +902,44 @@
                     toggleWishlist(newWishBtn, {name: title, price: price, img: img});
                 });
 
+                // --- NEW: Render Related Products ---
+                renderRelatedProducts(title);
+
                 showPage('product-detail');
+            }
+
+            // --- NEW: Related Products Logic ---
+            function renderRelatedProducts(currentProductName) {
+                const container = document.getElementById('related-products-container');
+                container.innerHTML = '';
+
+                // Get all store items from DOM (simple data scraping)
+                const allItems = Array.from(document.querySelectorAll('#store-grid .store-item')).map(item => ({
+                    html: item.outerHTML,
+                    name: item.dataset.name,
+                    price: item.dataset.price,
+                    element: item // Keep reference for cloning
+                }));
+
+                // Filter out current item & Randomize
+                const relatedItems = allItems
+                    .filter(item => !item.element.querySelector('h4').textContent.includes(currentProductName)) // Basic filter by displayed name
+                    .sort(() => 0.5 - Math.random()) // Shuffle
+                    .slice(0, 4); // Take 4
+
+                relatedItems.forEach(item => {
+                    // We need to clone the node properly to remove specific IDs if they existed (not needed here but good practice)
+                    // and strip out absolute positioning styles if they interfere.
+                    // Since we are using class-based cards, we can just rebuild the HTML structure or clone.
+                    // Cloning is safer to keep data attributes.
+                    const clone = item.element.cloneNode(true);
+                    
+                    // Remove absolute positioning classes if they exist (clean up)
+                    // Update: The original cards are clean, so we can append directly.
+                    // We just need to ensure click listeners work. Since we use global delegation (document.addEventListener('click')), it works!
+                    
+                    container.appendChild(clone);
+                });
             }
 
             // Global Click Handler for Store Items
@@ -806,6 +967,7 @@
                 if(card) {
                     e.preventDefault();
                     openProduct(card);
+                    window.scrollTo(0,0);
                 }
             });
 
@@ -863,7 +1025,7 @@
                 });
             }
 
-             // --- Modal Logic ---
+             // --- Modal Logic (Size Guide) ---
              const modal = document.getElementById('size-guide-modal');
              document.getElementById('size-guide-trigger').addEventListener('click', () => {
                  modal.classList.remove('hidden-modal');
@@ -872,6 +1034,98 @@
              document.getElementById('close-size-guide').addEventListener('click', () => {
                  modal.classList.remove('visible-modal');
                  modal.classList.add('hidden-modal');
+             });
+
+             // --- NEW: AI Modal Logic ---
+             const aiModal = document.getElementById('ai-tryon-modal');
+             const aiTriggerBtn = document.getElementById('ai-trigger-btn');
+             const aiCloseBtn = document.getElementById('close-ai-modal');
+             const aiFileInput = document.getElementById('ai-file-input');
+             
+             // Steps
+             const stepUpload = document.getElementById('ai-step-upload');
+             const stepProcess = document.getElementById('ai-step-processing');
+             const stepResult = document.getElementById('ai-step-result');
+
+             // Open AI Modal
+             aiTriggerBtn.addEventListener('click', () => {
+                 if (!isLoggedIn) {
+                     showPage('account');
+                     showToast("Log in to use the AI Stylist.");
+                     return;
+                 }
+                 // Reset state
+                 stepUpload.classList.remove('hidden');
+                 stepProcess.classList.add('hidden');
+                 stepResult.classList.add('hidden');
+                 aiFileInput.value = '';
+
+                 aiModal.classList.remove('hidden-modal');
+                 aiModal.classList.add('visible-modal');
+             });
+
+             // Close AI Modal
+             aiCloseBtn.addEventListener('click', () => {
+                 aiModal.classList.remove('visible-modal');
+                 aiModal.classList.add('hidden-modal');
+             });
+
+             // Handle File Upload & Simulation
+             aiFileInput.addEventListener('change', (e) => {
+                 const file = e.target.files[0];
+                 if (file) {
+                     const reader = new FileReader();
+                     reader.onload = function(e) {
+                         const imgData = e.target.result;
+                         
+                         // 1. Show Processing Step
+                         stepUpload.classList.add('hidden');
+                         stepProcess.classList.remove('hidden');
+                         document.getElementById('ai-user-preview').src = imgData;
+                         
+                         // Simulate AI Delays
+                         const statusText = document.getElementById('ai-status-text');
+                         
+                         setTimeout(() => { statusText.textContent = "Analysing Skin Tone & Lighting..."; }, 1500);
+                         setTimeout(() => { statusText.textContent = "Mapping Fabric Physics..."; }, 3000);
+                         setTimeout(() => { statusText.textContent = "Rendering Final Look..."; }, 4500);
+                         
+                         // 2. Show Result Step
+                         setTimeout(() => {
+                            stepProcess.classList.add('hidden');
+                            stepResult.classList.remove('hidden');
+                            
+                            // Set Result Images
+                            document.getElementById('ai-result-user').src = imgData;
+                            
+                            // Mocking size based on logic (just for demo)
+                            const sizes = ['S', 'M', 'L'];
+                            document.getElementById('ai-result-size').textContent = "Size " + sizes[Math.floor(Math.random() * sizes.length)];
+                         }, 6000);
+                     }
+                     reader.readAsDataURL(file);
+                 }
+             });
+
+             // Reset AI
+             document.getElementById('ai-try-another').addEventListener('click', () => {
+                stepResult.classList.add('hidden');
+                stepUpload.classList.remove('hidden');
+                aiFileInput.value = '';
+             });
+
+             // Add AI Result to Cart
+             document.getElementById('ai-add-to-cart').addEventListener('click', () => {
+                 const sizeText = document.getElementById('ai-result-size').textContent.replace('Size ', '');
+                 const priceText = document.getElementById('detail-price').textContent.replace('$', '');
+                 const title = document.getElementById('detail-title').textContent;
+                 const img = document.getElementById('detail-image').src;
+                 
+                 cart.push({name: title, price: parseInt(priceText), size: sizeText, img: img});
+                 updateCart();
+                 aiModal.classList.remove('visible-modal');
+                 aiModal.classList.add('hidden-modal');
+                 showToast("Added " + title + " to cart!");
              });
 
              // --- Footer Accordion Logic ---
