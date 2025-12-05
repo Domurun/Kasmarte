@@ -141,6 +141,18 @@
         </div>
     </div>
 
+    <!-- Success Order Modal -->
+    <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
+        <div class="bg-brand-white w-full max-w-md mx-4 p-8 rounded-lg shadow-2xl text-center relative">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <h2 class="font-header-dramatic text-3xl mb-2">Order Confirmed!</h2>
+            <p class="text-gray-600 mb-6">Thank you for shopping with KasMarte. Your order <span class="font-bold text-black" id="order-ref">#KM-0000</span> has been placed.</p>
+            <button id="close-success-modal" class="bg-brand-black text-brand-white font-bold py-3 px-8 rounded-md hover:opacity-90 transition uppercase tracking-wider w-full">Continue Shopping</button>
+        </div>
+    </div>
+
     <!-- AI Try-On Modal -->
     <div id="ai-tryon-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
         <div class="bg-brand-white w-full max-w-4xl mx-4 md:mx-auto rounded-lg shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
@@ -160,13 +172,32 @@
                 
                 <!-- Step 1: Upload -->
                 <div id="ai-step-upload" class="flex flex-col items-center justify-center h-full min-h-[400px]">
-                    <div class="text-center max-w-md">
+                    <div class="text-center max-w-md w-full">
                         <div class="mx-auto w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         </div>
                         <h3 class="font-bold text-xl mb-2">Upload a Full Body Photo</h3>
-                        <p class="text-gray-500 mb-8 text-sm">For the best results, use a photo with good lighting and a simple background. Our AI will map the fabric to your body shape.</p>
+                        <p class="text-gray-500 mb-6 text-sm">For the best results, use a photo with good lighting and a simple background.</p>
                         
+                        <!-- NEW: Style Preference -->
+                        <div class="mb-8 text-left bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <label class="block text-sm font-bold mb-2 uppercase">How do you like your fit?</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="ai-fit-pref" value="slim" class="accent-ai-accent mr-2">
+                                    <span class="text-sm">Slim Fit</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="ai-fit-pref" value="regular" checked class="accent-ai-accent mr-2">
+                                    <span class="text-sm">Regular</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="ai-fit-pref" value="loose" class="accent-ai-accent mr-2">
+                                    <span class="text-sm">Relaxed / Loose</span>
+                                </label>
+                            </div>
+                        </div>
+
                         <label class="block w-full cursor-pointer bg-brand-black text-brand-white font-bold py-4 rounded-md hover:opacity-90 transition uppercase tracking-wider text-center">
                             Select Photo
                             <input type="file" id="ai-file-input" accept="image/*" class="hidden">
@@ -188,7 +219,7 @@
                 </div>
 
                 <!-- Step 3: Result -->
-                <div id="ai-step-result" class="hidden h-full">
+                <div id="ai-step-result" class="hidden h-full min-h-[400px] flex flex-col">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
                         <div class="relative rounded-lg overflow-hidden bg-gray-100">
                             <span class="absolute top-4 left-4 bg-black text-white text-xs font-bold px-2 py-1 z-10">YOU</span>
@@ -202,12 +233,13 @@
                         <div class="flex flex-col justify-center space-y-6">
                             <div>
                                 <h3 class="font-header-dramatic text-3xl mb-2">Looks Good!</h3>
-                                <p class="text-gray-600">Based on your measurements, the <span id="ai-result-size" class="font-bold">Size M</span> offers the ideal drape for this silhouette.</p>
+                                <p class="text-gray-600">Based on your <span id="ai-pref-display" class="font-bold">Regular</span> fit preference, we recommend:</p>
+                                <p class="text-2xl font-bold mt-2" id="ai-result-size">Size M</p>
                             </div>
                             
                             <div class="bg-gray-50 p-4 rounded border border-gray-200">
                                 <h4 class="font-bold text-sm mb-2">AI Stylist Notes:</h4>
-                                <ul class="text-sm text-gray-600 space-y-2 list-disc pl-4">
+                                <ul class="text-sm text-gray-600 space-y-2 list-disc pl-4" id="ai-notes">
                                     <li>Shoulders align perfectly with the cut.</li>
                                     <li>Fabric falls naturally without bunching.</li>
                                     <li>Length is optimal for your height.</li>
@@ -381,48 +413,7 @@
                 </div>
 
                 <div id="store-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in">
-                    <div class="product-card store-item group cursor-pointer relative" data-name="linen shirt" data-price="120">
-                        <button class="wishlist-btn absolute top-3 right-3 z-20 text-gray-400 hover:text-red-500 hover:scale-110 transition-all p-2 rounded-full bg-white bg-opacity-80" aria-label="Add to wishlist">
-                            <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                        </button>
-                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                        <h4 class="font-body font-bold text-lg">Linen Shirt</h4><p class="opacity-70">$120</p>
-                    </div>
-                    <div class="product-card store-item group cursor-pointer relative" data-name="chino pants" data-price="160">
-                        <button class="wishlist-btn absolute top-3 right-3 z-20 text-gray-400 hover:text-red-500 hover:scale-110 transition-all p-2 rounded-full bg-white bg-opacity-80" aria-label="Add to wishlist">
-                            <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                        </button>
-                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                        <h4 class="font-body font-bold text-lg">Chino Trousers</h4><p class="opacity-70">$160</p>
-                    </div>
-                    <div class="product-card store-item group cursor-pointer relative" data-name="cashmere sweater" data-price="250">
-                        <button class="wishlist-btn absolute top-3 right-3 z-20 text-gray-400 hover:text-red-500 hover:scale-110 transition-all p-2 rounded-full bg-white bg-opacity-80" aria-label="Add to wishlist">
-                            <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                        </button>
-                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="https://images.unsplash.com/photo-1610652492500-ded49ceeb378?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                        <h4 class="font-body font-bold text-lg">Cashmere Sweater</h4><p class="opacity-70">$250</p>
-                    </div>
-                    <div class="product-card store-item group cursor-pointer relative" data-name="jacket" data-price="280">
-                        <button class="wishlist-btn absolute top-3 right-3 z-20 text-gray-400 hover:text-red-500 hover:scale-110 transition-all p-2 rounded-full bg-white bg-opacity-80" aria-label="Add to wishlist">
-                            <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                        </button>
-                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                        <h4 class="font-body font-bold text-lg">The Jacket</h4><p class="opacity-70">$280</p>
-                    </div>
-                    <div class="product-card store-item group cursor-pointer relative" data-name="leather bag" data-price="195">
-                        <button class="wishlist-btn absolute top-3 right-3 z-20 text-gray-400 hover:text-red-500 hover:scale-110 transition-all p-2 rounded-full bg-white bg-opacity-80" aria-label="Add to wishlist">
-                            <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                        </button>
-                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                        <h4 class="font-body font-bold text-lg">Leather Bag</h4><p class="opacity-70">$195</p>
-                    </div>
-                    <div class="product-card store-item group cursor-pointer relative" data-name="silk dress" data-price="310">
-                        <button class="wishlist-btn absolute top-3 right-3 z-20 text-gray-400 hover:text-red-500 hover:scale-110 transition-all p-2 rounded-full bg-white bg-opacity-80" aria-label="Add to wishlist">
-                            <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                        </button>
-                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
-                        <h4 class="font-body font-bold text-lg">Silk Dress</h4><p class="opacity-70">$310</p>
-                    </div>
+                    <!-- Products injected via JS -->
                 </div>
             </div>
         </section>
@@ -611,7 +602,7 @@
                                 <p class="text-sm text-blue-800">Please note: Due to our handcrafted process, your order will be available for shipping in <strong>3 weeks</strong>.</p>
                             </div>
 
-                            <button class="w-full bg-brand-black text-brand-white font-bold py-4 rounded-md hover:opacity-90 transition uppercase tracking-wider">Place Order</button>
+                            <button id="place-order-btn" class="w-full bg-brand-black text-brand-white font-bold py-4 rounded-md hover:opacity-90 transition uppercase tracking-wider">Place Order</button>
                         </div>
                     </div>
                 </div>
@@ -688,10 +679,29 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // State
-            let isLoggedIn = false; // Auth State
-            let cart = [];
-            let wishlist = [];
+            // --- 1. DATA-DRIVEN PRODUCTS ---
+            const products = [
+                { id: 1, name: "Linen Shirt", price: 120, img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80" },
+                { id: 2, name: "Chino Trousers", price: 160, img: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80" },
+                { id: 3, name: "Cashmere Sweater", price: 250, img: "https://images.unsplash.com/photo-1610652492500-ded49ceeb378?auto=format&fit=crop&w=800&q=80" },
+                { id: 4, name: "The Jacket", price: 280, img: "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=800&q=80" },
+                { id: 5, name: "Leather Bag", price: 195, img: "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80" },
+                { id: 6, name: "Silk Dress", price: 310, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80" }
+            ];
+
+            // --- 2. LOCAL STORAGE HELPER ---
+            function loadState(key, defaultVal) {
+                const stored = localStorage.getItem('kasmarte_' + key);
+                return stored ? JSON.parse(stored) : defaultVal;
+            }
+            function saveState(key, val) {
+                localStorage.setItem('kasmarte_' + key, JSON.stringify(val));
+            }
+
+            // State Initialization
+            let isLoggedIn = false; 
+            let cart = loadState('cart', []);
+            let wishlist = loadState('wishlist', []);
             
             const pages = document.querySelectorAll('.page-section');
             const cartCountEl = document.getElementById('cart-count');
@@ -711,7 +721,6 @@
 
             // --- Navigation Logic ---
             function showPage(pageName) {
-                // Handle Lookbook redirects from Home
                 if(pageName === 'home-lookbook') pageName = 'lookbook';
 
                 pages.forEach(p => p.classList.remove('active'));
@@ -722,19 +731,42 @@
                 if(pageName === 'wishlist') renderWishlist();
                 window.scrollTo(0, 0);
                 
-                // Close Mobile Menu
                 document.getElementById('new-menu-overlay').classList.remove('menu-open');
                 document.getElementById('icon-plus').classList.remove('hidden');
                 document.getElementById('icon-minus').classList.add('hidden');
             }
+
+            // --- Initialize Store Grid ---
+            function renderStoreGrid() {
+                const grid = document.getElementById('store-grid');
+                grid.innerHTML = '';
+                products.forEach(p => {
+                    // Check if in wishlist for initial render
+                    const isWishlisted = wishlist.some(w => w.name === p.name);
+                    const heartClass = isWishlisted ? 'heart-filled text-red-500' : 'text-gray-400';
+                    const filledClass = isWishlisted ? 'heart-filled' : '';
+
+                    const html = `
+                    <div class="product-card store-item group cursor-pointer relative" data-name="${p.name.toLowerCase()}" data-price="${p.price}" data-id="${p.id}">
+                        <button class="wishlist-btn absolute top-3 right-3 z-20 ${heartClass} hover:text-red-500 hover:scale-110 transition-all p-2 rounded-full bg-white bg-opacity-80" aria-label="Add to wishlist">
+                            <svg class="h-6 w-6 heart-icon ${filledClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                        </button>
+                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="${p.img}" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
+                        <h4 class="font-body font-bold text-lg">${p.name}</h4><p class="opacity-70">$${p.price}</p>
+                    </div>`;
+                    grid.insertAdjacentHTML('beforeend', html);
+                });
+            }
+            // Call on load
+            renderStoreGrid();
+            updateCart(); // update UI count from storage
+            updateWishlistCount(); // update UI count from storage
 
             // Nav Clicks
             document.querySelectorAll('[data-nav]').forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const navTarget = link.getAttribute('data-nav');
-                    
-                    // Auth Check for Wishlist navigation from menu
                     if (navTarget === 'wishlist' && !isLoggedIn) {
                         showPage('account');
                         showToast("Please log in to view your wishlist.");
@@ -758,34 +790,29 @@
                 document.getElementById('icon-minus').classList.add('hidden');
             });
 
-            // --- Home Page Teaser Logic ---
+            // Home Page Teaser Logic
             document.querySelectorAll('.home-teaser').forEach(teaser => {
                 teaser.addEventListener('click', () => {
                     showPage('lookbook');
                 });
             });
 
-            // --- Account Auth Logic ---
+            // Account Auth Logic
             const loginContainer = document.getElementById('login-form-container');
             const signupContainer = document.getElementById('signup-form-container');
-            
             document.getElementById('go-to-signup').addEventListener('click', () => {
                 loginContainer.classList.add('hidden');
                 signupContainer.classList.remove('hidden');
             });
-            
             document.getElementById('go-to-login').addEventListener('click', () => {
                 signupContainer.classList.add('hidden');
                 loginContainer.classList.remove('hidden');
             });
-
-            // SIMULATE LOGIN
             document.getElementById('login-btn-sim').addEventListener('click', () => {
                 isLoggedIn = true;
                 showToast("Logged in successfully!");
-                showPage('store'); // Redirect to store on login
+                showPage('store'); 
             });
-
 
             // --- Wishlist Logic ---
             function toggleWishlist(btn, product) {
@@ -796,23 +823,20 @@
                 }
 
                 const icon = btn.querySelector('svg');
-                // Check if already in wishlist by name
                 const existingIndex = wishlist.findIndex(item => item.name === product.name);
 
                 if (existingIndex > -1) {
-                    // Remove
                     wishlist.splice(existingIndex, 1);
                     icon.classList.remove('heart-filled');
                     btn.classList.remove('text-red-500');
-                    if(!btn.id.includes('detail')) btn.classList.add('text-gray-400'); // restore gray on grid items
+                    if(!btn.id.includes('detail')) btn.classList.add('text-gray-400');
                 } else {
-                    // Add
                     wishlist.push(product);
                     icon.classList.add('heart-filled');
                     btn.classList.add('text-red-500');
                     btn.classList.remove('text-gray-400');
                 }
-
+                saveState('wishlist', wishlist);
                 updateWishlistCount();
             }
 
@@ -825,18 +849,16 @@
             function renderWishlist() {
                 const container = document.getElementById('wishlist-container');
                 container.innerHTML = '';
-                
                 if (wishlist.length === 0) {
                     container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-20">Your wishlist is empty.</div>';
                     return;
                 }
-
                 wishlist.forEach(item => {
                     const html = `
-                    <div class="product-card cursor-pointer">
+                    <div class="product-card cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()">
                         <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4] relative">
                              <img src="${item.img}" class="w-full h-full object-cover">
-                             <button class="absolute top-2 right-2 text-red-500 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors" onclick="alert('Item removed from wishlist');">
+                             <button class="absolute top-2 right-2 text-red-500 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors" onclick="event.stopPropagation(); alert('Item removed'); location.reload();"> <!-- Simplified removal for demo -->
                                 <svg class="h-5 w-5 heart-filled" fill="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
                              </button>
                         </div>
@@ -849,23 +871,24 @@
 
             // --- Product Logic ---
             function openProduct(card) {
-                // IMPORTANT: Prevent opening product page if user clicked something meant for Home page navigation
                 if(card.classList.contains('home-teaser')) return;
 
-                const imgElement = card.querySelector('img');
-                const titleElement = card.querySelector('h4');
+                // 1. Get Product Data from Array if available (using ID), else scrape (fallback)
+                const pid = card.dataset.id;
+                let productData = products.find(p => p.id == pid);
                 
-                // Safety check
-                if (!imgElement || !titleElement) return;
+                // Fallback for related items if they are clones without ID lookup logic
+                if(!productData) {
+                    const title = card.querySelector('h4').textContent;
+                    const price = card.dataset.price;
+                    const img = card.querySelector('img').src;
+                    productData = { name: title, price: price, img: img };
+                }
 
-                const img = imgElement.src;
-                const title = titleElement.textContent;
-                const price = card.dataset.price;
-                
-                document.getElementById('detail-image').src = img;
-                document.getElementById('detail-title').textContent = title;
-                document.getElementById('detail-price').textContent = '$' + price;
-                document.getElementById('detail-breadcrumb-name').textContent = title;
+                document.getElementById('detail-image').src = productData.img;
+                document.getElementById('detail-title').textContent = productData.name;
+                document.getElementById('detail-price').textContent = '$' + productData.price;
+                document.getElementById('detail-breadcrumb-name').textContent = productData.name;
 
                 // Reset Add Button
                 const btn = document.getElementById('add-to-cart-btn');
@@ -878,9 +901,18 @@
                         showToast("Please log in to add to cart.");
                         return;
                     }
-                    const size = document.querySelector('input[name="size"]:checked').id.replace('size-','').toUpperCase();
-                    cart.push({name: title, price: parseInt(price), size: size, img: img});
-                    updateCart();
+                    // Loading State
+                    newBtn.textContent = "Adding...";
+                    newBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        const size = document.querySelector('input[name="size"]:checked').id.replace('size-','').toUpperCase();
+                        cart.push({name: productData.name, price: parseInt(productData.price), size: size, img: productData.img});
+                        saveState('cart', cart);
+                        updateCart();
+                        newBtn.textContent = "Added";
+                        setTimeout(() => { newBtn.textContent = "Add to Cart"; newBtn.disabled = false; }, 1000);
+                    }, 500); // Simulate network
                 });
 
                 // Reset Detail Wishlist Button
@@ -888,81 +920,58 @@
                 wishBtn.querySelector('svg').classList.remove('heart-filled');
                 wishBtn.classList.remove('text-red-500');
                 
-                // Check if already in wishlist
-                if (wishlist.some(item => item.name === title)) {
+                if (wishlist.some(item => item.name === productData.name)) {
                     wishBtn.querySelector('svg').classList.add('heart-filled');
                     wishBtn.classList.add('text-red-500');
                 }
 
-                // Remove old listeners on wishlist
                 const newWishBtn = wishBtn.cloneNode(true);
                 wishBtn.parentNode.replaceChild(newWishBtn, wishBtn);
 
                 newWishBtn.addEventListener('click', (e) => {
-                    toggleWishlist(newWishBtn, {name: title, price: price, img: img});
+                    toggleWishlist(newWishBtn, {name: productData.name, price: productData.price, img: productData.img});
                 });
 
-                // --- NEW: Render Related Products ---
-                renderRelatedProducts(title);
-
+                renderRelatedProducts(productData.name);
                 showPage('product-detail');
             }
 
-            // --- NEW: Related Products Logic ---
+            // Related Products Logic (Using Data Array)
             function renderRelatedProducts(currentProductName) {
                 const container = document.getElementById('related-products-container');
                 container.innerHTML = '';
 
-                // Get all store items from DOM (simple data scraping)
-                const allItems = Array.from(document.querySelectorAll('#store-grid .store-item')).map(item => ({
-                    html: item.outerHTML,
-                    name: item.dataset.name,
-                    price: item.dataset.price,
-                    element: item // Keep reference for cloning
-                }));
+                // Filter & Shuffle
+                const relatedItems = products
+                    .filter(p => p.name !== currentProductName)
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, 4);
 
-                // Filter out current item & Randomize
-                const relatedItems = allItems
-                    .filter(item => !item.element.querySelector('h4').textContent.includes(currentProductName)) // Basic filter by displayed name
-                    .sort(() => 0.5 - Math.random()) // Shuffle
-                    .slice(0, 4); // Take 4
-
-                relatedItems.forEach(item => {
-                    // We need to clone the node properly to remove specific IDs if they existed (not needed here but good practice)
-                    // and strip out absolute positioning styles if they interfere.
-                    // Since we are using class-based cards, we can just rebuild the HTML structure or clone.
-                    // Cloning is safer to keep data attributes.
-                    const clone = item.element.cloneNode(true);
-                    
-                    // Remove absolute positioning classes if they exist (clean up)
-                    // Update: The original cards are clean, so we can append directly.
-                    // We just need to ensure click listeners work. Since we use global delegation (document.addEventListener('click')), it works!
-                    
-                    container.appendChild(clone);
+                relatedItems.forEach(p => {
+                    const html = `
+                    <div class="product-card store-item cursor-pointer" data-id="${p.id}" data-name="${p.name.toLowerCase()}" data-price="${p.price}">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="${p.img}" class="w-full h-full object-cover"></div>
+                        <h4 class="font-body font-bold text-lg">${p.name}</h4><p class="opacity-70">$${p.price}</p>
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', html);
                 });
             }
 
-            // Global Click Handler for Store Items
+            // Global Click Handler
             document.addEventListener('click', (e) => {
-                // 1. Check if we clicked a wishlist button specifically
                 const wishlistBtn = e.target.closest('.wishlist-btn');
                 if (wishlistBtn) {
                     e.stopPropagation();
                     e.preventDefault();
-                    
                     const card = wishlistBtn.closest('.store-item');
                     if (!card) return;
-
                     const img = card.querySelector('img').src;
-                    const name = card.dataset.name; 
                     const title = card.querySelector('h4').textContent;
                     const price = card.dataset.price;
-                    
                     toggleWishlist(wishlistBtn, {name: title, price: price, img: img});
                     return; 
                 }
 
-                // 2. Check if we clicked a store item card (to open product page)
                 const card = e.target.closest('.store-item');
                 if(card) {
                     e.preventDefault();
@@ -975,8 +984,6 @@
             function updateCart() {
                 cartCountEl.textContent = cart.length;
                 cartCountEl.classList.remove('opacity-0');
-                const btn = document.getElementById('add-to-cart-btn');
-                if(btn) { btn.textContent = 'Added'; setTimeout(() => btn.textContent = 'Add to Cart', 1000); }
             }
 
             document.getElementById('cart-btn').addEventListener('click', () => {
@@ -1013,14 +1020,53 @@
                 document.getElementById('checkout-total').textContent = '$' + total;
             }
 
+            // --- Checkout Success Flow ---
+            const successModal = document.getElementById('success-modal');
+            const placeOrderBtn = document.getElementById('place-order-btn');
+            
+            placeOrderBtn.addEventListener('click', () => {
+                if(cart.length === 0) return;
+                
+                // Loading State
+                placeOrderBtn.textContent = "Processing...";
+                placeOrderBtn.disabled = true;
+
+                setTimeout(() => {
+                    // Generate Ref
+                    const ref = "KM-" + Math.floor(1000 + Math.random() * 9000);
+                    document.getElementById('order-ref').textContent = "#" + ref;
+                    
+                    // Clear Cart & Storage
+                    cart = [];
+                    saveState('cart', cart);
+                    updateCart();
+                    renderCheckout(); // Clear UI
+
+                    // Show Modal
+                    successModal.classList.remove('hidden-modal');
+                    successModal.classList.add('visible-modal');
+                    
+                    // Reset Button
+                    placeOrderBtn.textContent = "Place Order";
+                    placeOrderBtn.disabled = false;
+                }, 1500);
+            });
+
+            document.getElementById('close-success-modal').addEventListener('click', () => {
+                successModal.classList.remove('visible-modal');
+                successModal.classList.add('hidden-modal');
+                showPage('store');
+            });
+
+
             // --- Search Logic ---
             const searchInput = document.getElementById('store-search');
             if (searchInput) {
                 searchInput.addEventListener('input', () => {
                     const search = searchInput.value.toLowerCase();
                     document.querySelectorAll('.store-item').forEach(item => {
-                        const name = item.dataset.name.toLowerCase();
-                        item.classList.toggle('hidden', !name.includes(search));
+                        const name = item.dataset.name;
+                        if(name) item.classList.toggle('hidden', !name.includes(search));
                     });
                 });
             }
@@ -1036,7 +1082,7 @@
                  modal.classList.add('hidden-modal');
              });
 
-             // --- NEW: AI Modal Logic ---
+             // --- AI Modal Logic ---
              const aiModal = document.getElementById('ai-tryon-modal');
              const aiTriggerBtn = document.getElementById('ai-trigger-btn');
              const aiCloseBtn = document.getElementById('close-ai-modal');
@@ -1054,67 +1100,81 @@
                      showToast("Log in to use the AI Stylist.");
                      return;
                  }
-                 // Reset state
                  stepUpload.classList.remove('hidden');
                  stepProcess.classList.add('hidden');
                  stepResult.classList.add('hidden');
                  aiFileInput.value = '';
-
                  aiModal.classList.remove('hidden-modal');
                  aiModal.classList.add('visible-modal');
              });
 
-             // Close AI Modal
              aiCloseBtn.addEventListener('click', () => {
                  aiModal.classList.remove('visible-modal');
                  aiModal.classList.add('hidden-modal');
              });
 
-             // Handle File Upload & Simulation
              aiFileInput.addEventListener('change', (e) => {
                  const file = e.target.files[0];
-                 if (file) {
-                     const reader = new FileReader();
-                     reader.onload = function(e) {
-                         const imgData = e.target.result;
-                         
-                         // 1. Show Processing Step
-                         stepUpload.classList.add('hidden');
-                         stepProcess.classList.remove('hidden');
-                         document.getElementById('ai-user-preview').src = imgData;
-                         
-                         // Simulate AI Delays
-                         const statusText = document.getElementById('ai-status-text');
-                         
-                         setTimeout(() => { statusText.textContent = "Analysing Skin Tone & Lighting..."; }, 1500);
-                         setTimeout(() => { statusText.textContent = "Mapping Fabric Physics..."; }, 3000);
-                         setTimeout(() => { statusText.textContent = "Rendering Final Look..."; }, 4500);
-                         
-                         // 2. Show Result Step
-                         setTimeout(() => {
+                 if (!file) return;
+
+                 const reader = new FileReader();
+                 reader.onload = function(e) {
+                     const imgData = e.target.result;
+                     
+                     // 1. Show Processing
+                     stepUpload.classList.add('hidden');
+                     stepProcess.classList.remove('hidden');
+                     document.getElementById('ai-user-preview').src = imgData;
+                     
+                     const statusText = document.getElementById('ai-status-text');
+                     setTimeout(() => { statusText.textContent = "Analysing Skin Tone & Lighting..."; }, 1000);
+                     setTimeout(() => { statusText.textContent = "Mapping Fabric Physics..."; }, 2000);
+                     
+                     setTimeout(() => {
+                        try {
+                            // 2. Show Result
                             stepProcess.classList.add('hidden');
                             stepResult.classList.remove('hidden');
-                            
-                            // Set Result Images
                             document.getElementById('ai-result-user').src = imgData;
                             
-                            // Mocking size based on logic (just for demo)
-                            const sizes = ['S', 'M', 'L'];
-                            document.getElementById('ai-result-size').textContent = "Size " + sizes[Math.floor(Math.random() * sizes.length)];
-                         }, 6000);
-                     }
-                     reader.readAsDataURL(file);
+                            // Safe Logic for Preference
+                            const prefElement = document.querySelector('input[name="ai-fit-pref"]:checked');
+                            const pref = prefElement ? prefElement.value : 'regular';
+
+                            const displayPref = document.getElementById('ai-pref-display');
+                            const sizeDisplay = document.getElementById('ai-result-size');
+                            const notes = document.getElementById('ai-notes');
+
+                            if(pref === 'slim') {
+                                displayPref.textContent = "Slim Fit";
+                                sizeDisplay.textContent = "Size S";
+                                notes.innerHTML = "<li>Snug around shoulders.</li><li>Tapered waist profile.</li><li>Clean, modern silhouette.</li>";
+                            } else if (pref === 'loose') {
+                                displayPref.textContent = "Relaxed Fit";
+                                sizeDisplay.textContent = "Size L";
+                                notes.innerHTML = "<li>Dropped shoulder seams.</li><li>Extra room in torso.</li><li>Comfortable, breezy drape.</li>";
+                            } else {
+                                displayPref.textContent = "Regular";
+                                sizeDisplay.textContent = "Size M";
+                                notes.innerHTML = "<li>Shoulders align perfectly.</li><li>Fabric falls naturally.</li><li>Optimal length for height.</li>";
+                            }
+                        } catch (err) {
+                            console.error("AI Logic Error", err);
+                            // Fallback if logic fails
+                            stepProcess.classList.add('hidden');
+                            stepResult.classList.remove('hidden');
+                        }
+                     }, 3000);
                  }
+                 reader.readAsDataURL(file);
              });
 
-             // Reset AI
              document.getElementById('ai-try-another').addEventListener('click', () => {
                 stepResult.classList.add('hidden');
                 stepUpload.classList.remove('hidden');
                 aiFileInput.value = '';
              });
 
-             // Add AI Result to Cart
              document.getElementById('ai-add-to-cart').addEventListener('click', () => {
                  const sizeText = document.getElementById('ai-result-size').textContent.replace('Size ', '');
                  const priceText = document.getElementById('detail-price').textContent.replace('$', '');
@@ -1122,13 +1182,14 @@
                  const img = document.getElementById('detail-image').src;
                  
                  cart.push({name: title, price: parseInt(priceText), size: sizeText, img: img});
+                 saveState('cart', cart);
                  updateCart();
                  aiModal.classList.remove('visible-modal');
                  aiModal.classList.add('hidden-modal');
                  showToast("Added " + title + " to cart!");
              });
 
-             // --- Footer Accordion Logic ---
+             // --- Footer Accordion ---
              document.querySelectorAll('.footer-accordion-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     if (window.innerWidth < 768) {
@@ -1145,23 +1206,18 @@
                 });
              });
 
-             // --- HEADER SCROLL LOGIC (Logo & Hide) ---
+             // --- Header Scroll ---
              const header = document.getElementById('main-header');
              const brandText = document.getElementById('brand-text');
              const hero = document.getElementById('hero-section');
-             
              window.addEventListener('scroll', () => {
                  const scrollY = window.scrollY;
                  const heroHeight = hero ? hero.offsetHeight : 500;
-
-                 // 1. Logo Transition (KASMARTE -> K)
                  if (scrollY > 50) {
                      brandText.textContent = "K";
                  } else {
                      brandText.textContent = "KASMARTE";
                  }
-
-                 // 2. Hide Header after Hero Section
                  if (scrollY > heroHeight) {
                      header.classList.add('header-hidden');
                  } else {
