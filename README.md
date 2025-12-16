@@ -1,2 +1,1 @@
-# Flint
 # FLINT
