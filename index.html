@@ -6,6 +6,7 @@
     <title>KasMarte | Luxury Fashion & AI Stylist</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -452,6 +453,8 @@
                             <form class="space-y-4" onsubmit="event.preventDefault(); document.getElementById('login-btn-sim').click();">
                                 <input type="email" placeholder="Email Address" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
                                 <input type="password" placeholder="Password" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                                <!-- ReCAPTCHA Widget (Login) -->
+                                <div class="g-recaptcha mb-4" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                                 <button class="w-full bg-brand-black text-brand-white py-3 rounded-lg font-bold hover:opacity-90 transition uppercase tracking-wider">Log In</button>
                             </form>
                             
@@ -483,6 +486,8 @@
                                 <input type="email" placeholder="Email Address" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
                                 <input type="password" placeholder="Password" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
                                 <input type="password" placeholder="Confirm Password" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                                <!-- ReCAPTCHA Widget (Signup) -->
+                                <div class="g-recaptcha mb-4" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                                 <button class="w-full bg-brand-black text-brand-white py-3 rounded-lg font-bold hover:opacity-90 transition uppercase tracking-wider">Create Account</button>
                             </form>
                             
@@ -809,6 +814,18 @@
                 loginContainer.classList.remove('hidden');
             });
             document.getElementById('login-btn-sim').addEventListener('click', () => {
+                // reCAPTCHA CHECK
+                if (typeof grecaptcha !== 'undefined') {
+                    // For demo purposes, we will try to get response. 
+                    // Note: If multiple widgets exist, this gets the first one. 
+                    // In a real app, you would target by widget ID.
+                    const response = grecaptcha.getResponse();
+                    if (response.length === 0) {
+                        showToast("Please verify you are not a robot.");
+                        return;
+                    }
+                }
+                
                 isLoggedIn = true;
                 showToast("Logged in successfully!");
                 showPage('store'); 
