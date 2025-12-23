@@ -6,6 +6,7 @@
     <title>KasMarte | Luxury Fashion & AI Stylist</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Removed Firebase SDKs to resolve Script Error -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -101,8 +102,8 @@
         left: 0;
         width: 100%;
         height: 2px;
-        background: #2b1ae1;
-        box-shadow: 0 0 10px #2b1ae1;
+        background: #8b5cf6;
+        box-shadow: 0 0 10px #8b5cf6;
         animation: scan 2s linear infinite;
         opacity: 0;
       }
@@ -111,6 +112,21 @@
         0% { top: 0%; }
         50% { top: 100%; }
         100% { top: 0%; }
+      }
+      
+      /* Loading Spinner */
+      .loader {
+        border: 3px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 3px solid #8b5cf6;
+        width: 24px;
+        height: 24px;
+        -webkit-animation: spin 1s linear infinite; /* Safari */
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
 
     </style>
@@ -157,12 +173,12 @@
 
     <!-- AI Try-On Modal -->
     <div id="ai-tryon-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
-        <div class="bg-brand-white w-full max-w-4xl mx-4 md:mx-auto rounded-lg shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+        <div class="bg-brand-white w-full max-w-5xl mx-4 md:mx-auto rounded-lg shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
             <!-- Header -->
             <div class="p-6 border-b flex justify-between items-center bg-gray-50">
                 <div class="flex items-center gap-2">
                     <span class="w-8 h-8 rounded-full bg-ai-accent text-white flex items-center justify-center text-xs font-bold">AI</span>
-                    <h2 class="font-header-dramatic text-2xl">Virtual Fitting Room</h2>
+                    <h2 class="font-header-dramatic text-2xl">KasMarte Virtual Atelier</h2>
                 </div>
                 <button id="close-ai-modal" class="text-gray-500 hover:text-brand-black transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -178,82 +194,66 @@
                         <div class="mx-auto w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         </div>
-                        <h3 class="font-bold text-xl mb-2">Upload a Full Body Photo</h3>
-                        <p class="text-gray-500 mb-6 text-sm">For the best results, use a photo with good lighting and a simple background.</p>
+                        <h3 class="font-bold text-xl mb-2">Upload Your Full Body Photo</h3>
+                        <p class="text-gray-500 mb-6 text-sm">We will generate a realistic preview of you wearing the <span id="ai-product-name-display" class="font-bold text-black">Product</span> and analyze your frame for the perfect size.</p>
                         
-                        <!-- NEW: Style Preference -->
-                        <div class="mb-8 text-left bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <label class="block text-sm font-bold mb-2 uppercase">How do you like your fit?</label>
-                            <div class="flex gap-4">
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="ai-fit-pref" value="slim" class="accent-ai-accent mr-2">
-                                    <span class="text-sm">Slim Fit</span>
-                                </label>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="ai-fit-pref" value="regular" checked class="accent-ai-accent mr-2">
-                                    <span class="text-sm">Regular</span>
-                                </label>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="radio" name="ai-fit-pref" value="loose" class="accent-ai-accent mr-2">
-                                    <span class="text-sm">Relaxed / Loose</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <label class="block w-full cursor-pointer bg-brand-black text-brand-white font-bold py-4 rounded-md hover:opacity-90 transition uppercase tracking-wider text-center">
-                            Select Photo
+                        <label class="block w-full cursor-pointer bg-brand-black text-brand-white font-bold py-4 rounded-md hover:opacity-90 transition uppercase tracking-wider text-center relative overflow-hidden group">
+                            <span class="relative z-10">Select Photo</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-ai-accent opacity-0 group-hover:opacity-100 transition-opacity z-0"></div>
                             <input type="file" id="ai-file-input" accept="image/*" class="hidden">
                         </label>
-                        <p class="text-xs text-gray-400 mt-4">Protected by Privacy Policy. Images are processed locally.</p>
+                        <p class="text-xs text-gray-400 mt-4">Images are processed securely by our AI Stylist.</p>
                     </div>
                 </div>
 
-                <!-- Step 2: Processing -->
+                <!-- Step 2: Processing (Generic) -->
                 <div id="ai-step-processing" class="hidden flex flex-col items-center justify-center h-full min-h-[400px]">
                     <div class="relative w-64 h-80 bg-gray-200 rounded-lg overflow-hidden mb-6 scanning">
                         <img id="ai-user-preview" class="w-full h-full object-cover opacity-80" src="">
                         <div class="scan-line"></div>
                         <div class="absolute inset-0 border-2 border-ai-accent opacity-50 rounded-lg"></div>
-                        <!-- Grid overlay for tech feel -->
-                        <div class="absolute inset-0" style="background-image: radial-gradient(circle, #8b5cf6 1px, transparent 1px); background-size: 20px 20px; opacity: 0.2;"></div>
+                        <div class="absolute bottom-2 left-2 right-2 bg-black/60 text-white text-xs p-2 rounded backdrop-blur-sm text-center" id="ai-status-detail">Initializing...</div>
                     </div>
-                    <h3 id="ai-status-text" class="font-header-dramatic text-2xl animate-pulse">Scanning Body Dimensions...</h3>
+                    <h3 id="ai-status-text" class="font-header-dramatic text-2xl animate-pulse">Consulting Stylist...</h3>
                 </div>
 
                 <!-- Step 3: Result -->
                 <div id="ai-step-result" class="hidden h-full min-h-[400px] flex flex-col">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-                        <div class="relative rounded-lg overflow-hidden bg-gray-100">
-                            <span class="absolute top-4 left-4 bg-black text-white text-xs font-bold px-2 py-1 z-10">YOU</span>
-                            <img id="ai-result-user" class="w-full h-full object-cover" src="">
-                            <!-- Overlay Mockup -->
-                            <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded shadow text-center">
-                                <p class="text-xs text-gray-500 uppercase">Fit Score</p>
-                                <p class="font-bold text-ai-accent">98% Match</p>
+                        <!-- AI Generated Image Column -->
+                        <div class="relative rounded-lg overflow-hidden bg-gray-100 h-96 md:h-auto group">
+                            <span class="absolute top-4 left-4 bg-ai-accent text-white text-xs font-bold px-2 py-1 z-10 rounded">AI GENERATED FIT</span>
+                            <img id="ai-generated-image" class="w-full h-full object-cover" src="">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity" id="ai-image-loader">
+                                <div class="loader mr-2"></div> <span class="text-white font-bold">Refining Fabric...</span>
                             </div>
                         </div>
-                        <div class="flex flex-col justify-center space-y-6">
-                            <div>
-                                <h3 class="font-header-dramatic text-3xl mb-2">Looks Good!</h3>
-                                <p class="text-gray-600">Based on your <span id="ai-pref-display" class="font-bold">Regular</span> fit preference, we recommend:</p>
-                                <p class="text-2xl font-bold mt-2" id="ai-result-size">Size M</p>
+
+                        <!-- Analysis Column -->
+                        <div class="flex flex-col space-y-6">
+                            <div class="bg-purple-50 p-6 rounded-lg border border-purple-100">
+                                <h3 class="font-header-dramatic text-3xl mb-2 text-ai-accent">Stylist Recommendation</h3>
+                                <div id="ai-sizing-result">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="loader"></div>
+                                        <span class="text-gray-600 text-sm">Analyzing body geometry...</span>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <div class="bg-gray-50 p-4 rounded border border-gray-200">
-                                <h4 class="font-bold text-sm mb-2">AI Stylist Notes:</h4>
-                                <ul class="text-sm text-gray-600 space-y-2 list-disc pl-4" id="ai-notes">
-                                    <li>Shoulders align perfectly with the cut.</li>
-                                    <li>Fabric falls naturally without bunching.</li>
-                                    <li>Length is optimal for your height.</li>
-                                </ul>
+                            <div class="space-y-3">
+                                <h4 class="font-bold text-sm uppercase tracking-wide text-gray-500">How it works</h4>
+                                <p class="text-xs text-gray-500">Our AI analyzes your shoulder width, torso length, and estimated build from the photo to match with our garment measurements. Visual generation is an artistic preview.</p>
                             </div>
 
-                            <button id="ai-add-to-cart" class="w-full bg-brand-black text-brand-white font-bold py-3 rounded-md hover:opacity-90 transition uppercase tracking-wider">
-                                Add This Look to Cart
-                            </button>
-                            <button id="ai-try-another" class="w-full border border-gray-300 text-gray-600 font-bold py-3 rounded-md hover:bg-gray-50 transition uppercase tracking-wider text-xs">
-                                Try Another Photo
-                            </button>
+                            <div class="mt-auto space-y-3">
+                                <button id="ai-add-to-cart" class="w-full bg-brand-black text-brand-white font-bold py-3 rounded-md hover:opacity-90 transition uppercase tracking-wider flex justify-center items-center gap-2">
+                                    Add Recommended Size to Cart
+                                </button>
+                                <button id="ai-try-another" class="w-full border border-gray-300 text-gray-600 font-bold py-3 rounded-md hover:bg-gray-50 transition uppercase tracking-wider text-xs">
+                                    Try Another Photo
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -380,14 +380,14 @@
                                 <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" class="w-full h-96 object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-700">
                                 <div class="mt-4 flex justify-between items-center text-sm font-bold">
                                     <span>SCAN COMPLETE</span>
-                                    <span class="text-ai-accent">98% FIT MATCH</span>
+                                    <span class="text-ai-accent">VISUAL ANALYSIS ACTIVE</span>
                                 </div>
                             </div>
                         </div>
                         <div class="w-full md:w-1/2 space-y-8">
                             <h2 class="font-header-dramatic text-5xl md:text-7xl leading-tight">Stop Guessing.<br>Start <span class="text-transparent bg-clip-text bg-gradient-to-r from-ai-accent to-purple-600">Fitting.</span></h2>
                             <p class="text-lg text-gray-600 leading-relaxed">
-                                Experience the future of fashion with our AI Virtual Stylist. Upload a photo, set your fit preference, and watch as our algorithm maps the fabric to your unique silhouette. No more returns. Just the perfect fit, every time.
+                                Experience the future of fashion with our AI Virtual Stylist. Upload a photo and let our advanced visual model analyze your proportions for the perfect size recommendation, and generate a photorealistic preview of you wearing the collection.
                             </p>
                             <a href="#" data-nav="store" class="inline-flex items-center gap-3 border-b-2 border-brand-black pb-2 text-lg font-bold hover:text-ai-accent hover:border-ai-accent transition-colors">
                                 Try Virtual Fitting Room
@@ -423,20 +423,6 @@
                         <h4 class="font-body font-bold text-lg text-center tracking-wide">Evening Silk</h4>
                         <p class="text-center text-xs text-gray-500 mt-2 uppercase tracking-widest">Gala / Night</p>
                     </div>
-                </div>
-            </section>
-
-            <!-- Philosophy Section (Compact) -->
-            <section class="container mx-auto px-6 py-24 flex flex-col md:flex-row items-center gap-12">
-                <div class="w-full md:w-1/2">
-                    <img src="https://images.unsplash.com/photo-1603400521630-9f2de124b33b?auto=format&fit=crop&w=1200&q=80" alt="Studio" class="w-full h-auto grayscale hover:grayscale-0 transition-all duration-700">
-                </div>
-                <div class="w-full md:w-1/2 space-y-6">
-                    <h2 class="font-header-dramatic text-5xl">The Atelier</h2>
-                    <p class="text-lg text-gray-600 leading-relaxed">
-                        We unite artisan tradition with modern design. Each piece is designed and crafted in our small studio, focusing on natural materials and the quiet confidence of a perfect fit. We believe that true luxury lies in the details you can feel, not just the ones you can see.
-                    </p>
-                    <button data-nav="lookbook" class="text-brand-black border-b border-brand-black pb-1 font-bold uppercase tracking-wider hover:opacity-60 transition-opacity">Explore Our World</button>
                 </div>
             </section>
         </section>
@@ -738,6 +724,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- 0. AI CONFIGURATION ---
+            const apiKey = ""; // API Key provided by environment
+            let currentProductForAI = null; // Stores currently selected product
+
             // --- 1. DATA-DRIVEN PRODUCTS ---
             const products = [
                 { id: 1, name: "Linen Shirt", price: 120, img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80" },
@@ -870,9 +860,6 @@
             document.getElementById('login-btn-sim').addEventListener('click', () => {
                 // reCAPTCHA CHECK
                 if (typeof grecaptcha !== 'undefined') {
-                    // For demo purposes, we will try to get response. 
-                    // Note: If multiple widgets exist, this gets the first one. 
-                    // In a real app, you would target by widget ID.
                     const response = grecaptcha.getResponse();
                     if (response.length === 0) {
                         showToast("Please verify you are not a robot.");
@@ -956,6 +943,10 @@
                     productData = { name: title, price: price, img: img };
                 }
 
+                // *** Store current product for AI context ***
+                currentProductForAI = productData;
+                document.getElementById('ai-product-name-display').textContent = productData.name;
+
                 document.getElementById('detail-image').src = productData.img;
                 document.getElementById('detail-title').textContent = productData.name;
                 document.getElementById('detail-price').textContent = '$' + productData.price;
@@ -983,7 +974,7 @@
                         updateCart();
                         newBtn.textContent = "Added";
                         setTimeout(() => { newBtn.textContent = "Add to Cart"; newBtn.disabled = false; }, 1000);
-                    }, 500); // Simulate network
+                    }, 500); 
                 });
 
                 // Reset Detail Wishlist Button
@@ -1007,7 +998,7 @@
                 showPage('product-detail');
             }
 
-            // Related Products Logic (Using Data Array)
+            // Related Products Logic
             function renderRelatedProducts(currentProductName) {
                 const container = document.getElementById('related-products-container');
                 container.innerHTML = '';
@@ -1098,26 +1089,21 @@
             placeOrderBtn.addEventListener('click', () => {
                 if(cart.length === 0) return;
                 
-                // Loading State
                 placeOrderBtn.textContent = "Processing...";
                 placeOrderBtn.disabled = true;
 
                 setTimeout(() => {
-                    // Generate Ref
                     const ref = "KM-" + Math.floor(1000 + Math.random() * 9000);
                     document.getElementById('order-ref').textContent = "#" + ref;
                     
-                    // Clear Cart & Storage
                     cart = [];
                     saveState('cart', cart);
                     updateCart();
-                    renderCheckout(); // Clear UI
+                    renderCheckout(); 
 
-                    // Show Modal
                     successModal.classList.remove('hidden-modal');
                     successModal.classList.add('visible-modal');
                     
-                    // Reset Button
                     placeOrderBtn.textContent = "Place Order";
                     placeOrderBtn.disabled = false;
                 }, 1500);
@@ -1153,7 +1139,70 @@
                  modal.classList.add('hidden-modal');
              });
 
-             // --- AI Modal Logic ---
+             // --- AI API LOGIC ---
+             
+             // 1. Analyze Size (Gemini Text - Visual Analysis)
+             async function analyzeSize(base64Image, productName) {
+                const prompt = `Analyze this image of a person. You are a professional high-end fashion tailor.
+                Task: Estimate the person's body type (e.g., Slim, Athletic, Regular, Broad) and recommend a size (S, M, L, XL, XXL) for a "${productName}".
+                Format: Return ONLY valid JSON: { "body_type": "Type", "recommended_size": "Size", "reasoning": "Brief explanation based on shoulder width or torso length." }`;
+
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [
+                                    { text: prompt },
+                                    { inlineData: { mimeType: "image/jpeg", data: base64Image } }
+                                ]
+                            }],
+                            generationConfig: { responseMimeType: "application/json" }
+                        })
+                    });
+
+                    const data = await response.json();
+                    if(data.error) throw new Error(data.error.message);
+                    return JSON.parse(data.candidates[0].content.parts[0].text);
+                } catch (error) {
+                    console.error("Size Analysis Failed:", error);
+                    return { body_type: "Standard", recommended_size: "M", reasoning: "Could not analyze specific proportions, defaulting to average." };
+                }
+             }
+
+             // 2. Generate Try-On Image (Gemini Image Gen/Edit)
+             async function generateTryOn(base64Image, productName) {
+                // Use a creative prompt to "edit" the image content
+                const prompt = `A photorealistic full body shot of the person in this image wearing a ${productName}. High fashion photography style. Keep the person's face and body pose exactly the same, just change the outfit.`;
+                
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [
+                                    { text: prompt },
+                                    { inlineData: { mimeType: "image/jpeg", data: base64Image } }
+                                ]
+                            }],
+                            generationConfig: { responseModalities: ["IMAGE"] }
+                        })
+                    });
+
+                    const data = await response.json();
+                    if(data.error) throw new Error(data.error.message);
+                    
+                    const imageBase64 = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+                    return imageBase64 ? `data:image/jpeg;base64,${imageBase64}` : null;
+                } catch (error) {
+                    console.error("Image Gen Failed:", error);
+                    return null;
+                }
+             }
+
+             // --- AI Modal UI Logic ---
              const aiModal = document.getElementById('ai-tryon-modal');
              const aiTriggerBtn = document.getElementById('ai-trigger-btn');
              const aiCloseBtn = document.getElementById('close-ai-modal');
@@ -1163,6 +1212,11 @@
              const stepUpload = document.getElementById('ai-step-upload');
              const stepProcess = document.getElementById('ai-step-processing');
              const stepResult = document.getElementById('ai-step-result');
+             const statusText = document.getElementById('ai-status-text');
+             const statusDetail = document.getElementById('ai-status-detail');
+             const generatedImageEl = document.getElementById('ai-generated-image');
+             const imageLoader = document.getElementById('ai-image-loader');
+             const sizingResultEl = document.getElementById('ai-sizing-result');
 
              // Open AI Modal
              aiTriggerBtn.addEventListener('click', () => {
@@ -1189,53 +1243,64 @@
                  if (!file) return;
 
                  const reader = new FileReader();
-                 reader.onload = function(e) {
-                     const imgData = e.target.result;
+                 reader.onload = async function(e) {
+                     const imgData = e.target.result; // Data URL for display
+                     const base64Clean = imgData.split(',')[1]; // Raw Base64 for API
                      
-                     // 1. Show Processing
+                     // 1. Show Processing UI
                      stepUpload.classList.add('hidden');
                      stepProcess.classList.remove('hidden');
                      document.getElementById('ai-user-preview').src = imgData;
                      
-                     const statusText = document.getElementById('ai-status-text');
-                     setTimeout(() => { statusText.textContent = "Analysing Skin Tone & Lighting..."; }, 1000);
-                     setTimeout(() => { statusText.textContent = "Mapping Fabric Physics..."; }, 2000);
-                     
-                     setTimeout(() => {
-                        try {
-                            // 2. Show Result
-                            stepProcess.classList.add('hidden');
-                            stepResult.classList.remove('hidden');
-                            document.getElementById('ai-result-user').src = imgData;
-                            
-                            // Safe Logic for Preference
-                            const prefElement = document.querySelector('input[name="ai-fit-pref"]:checked');
-                            const pref = prefElement ? prefElement.value : 'regular';
+                     statusText.textContent = "Scanning Body Dimensions...";
+                     statusDetail.textContent = "Analysing Proportions";
 
-                            const displayPref = document.getElementById('ai-pref-display');
-                            const sizeDisplay = document.getElementById('ai-result-size');
-                            const notes = document.getElementById('ai-notes');
+                     // 2. Perform Parallel API Calls (Analysis & Generation)
+                     try {
+                         // --- Call 1: Size Analysis ---
+                         statusText.textContent = "Consulting AI Stylist...";
+                         const sizeData = await analyzeSize(base64Clean, currentProductForAI.name);
+                         
+                         // Update UI with Size Data immediately when ready
+                         sizingResultEl.innerHTML = `
+                            <div class="mb-4">
+                                <p class="text-xs uppercase text-gray-500 font-bold">Detected Build</p>
+                                <p class="text-lg">${sizeData.body_type}</p>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-xs uppercase text-gray-500 font-bold">Recommended Size</p>
+                                <p class="text-4xl font-header-dramatic font-bold text-ai-accent" id="ai-rec-size">${sizeData.recommended_size}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-purple-100">
+                                <p class="text-xs italic text-gray-600">"${sizeData.reasoning}"</p>
+                            </div>
+                         `;
 
-                            if(pref === 'slim') {
-                                displayPref.textContent = "Slim Fit";
-                                sizeDisplay.textContent = "Size S";
-                                notes.innerHTML = "<li>Snug around shoulders.</li><li>Tapered waist profile.</li><li>Clean, modern silhouette.</li>";
-                            } else if (pref === 'loose') {
-                                displayPref.textContent = "Relaxed Fit";
-                                sizeDisplay.textContent = "Size L";
-                                notes.innerHTML = "<li>Dropped shoulder seams.</li><li>Extra room in torso.</li><li>Comfortable, breezy drape.</li>";
-                            } else {
-                                displayPref.textContent = "Regular";
-                                sizeDisplay.textContent = "Size M";
-                                notes.innerHTML = "<li>Shoulders align perfectly.</li><li>Fabric falls naturally.</li><li>Optimal length for height.</li>";
-                            }
-                        } catch (err) {
-                            console.error("AI Logic Error", err);
-                            // Fallback if logic fails
-                            stepProcess.classList.add('hidden');
-                            stepResult.classList.remove('hidden');
-                        }
-                     }, 3000);
+                         // --- Transition to Result View ---
+                         stepProcess.classList.add('hidden');
+                         stepResult.classList.remove('hidden');
+                         
+                         // Set placeholder while image generates (using original for now)
+                         generatedImageEl.src = imgData; 
+                         imageLoader.classList.remove('opacity-0'); // Show loader overlay on image
+
+                         // --- Call 2: Image Generation ---
+                         // We do this after showing the size result so the user sees progress
+                         const genImageSrc = await generateTryOn(base64Clean, currentProductForAI.name);
+                         
+                         if(genImageSrc) {
+                             generatedImageEl.src = genImageSrc;
+                             imageLoader.classList.add('opacity-0'); // Hide loader
+                         } else {
+                             imageLoader.innerHTML = '<span class="text-white text-xs">Preview generation unavailable.</span>';
+                         }
+
+                     } catch (err) {
+                         console.error("Workflow Error", err);
+                         showToast("AI Service busy. Please try again.");
+                         stepProcess.classList.add('hidden');
+                         stepUpload.classList.remove('hidden');
+                     }
                  }
                  reader.readAsDataURL(file);
              });
@@ -1247,17 +1312,18 @@
              });
 
              document.getElementById('ai-add-to-cart').addEventListener('click', () => {
-                 const sizeText = document.getElementById('ai-result-size').textContent.replace('Size ', '');
-                 const priceText = document.getElementById('detail-price').textContent.replace('$', '');
-                 const title = document.getElementById('detail-title').textContent;
-                 const img = document.getElementById('detail-image').src;
+                 const sizeText = document.getElementById('ai-rec-size').textContent;
+                 const title = currentProductForAI.name;
+                 const price = currentProductForAI.price;
+                 const img = currentProductForAI.img;
                  
-                 cart.push({name: title, price: parseInt(priceText), size: sizeText, img: img});
+                 cart.push({name: title, price: parseInt(price), size: sizeText, img: img});
                  saveState('cart', cart);
                  updateCart();
+                 
                  aiModal.classList.remove('visible-modal');
                  aiModal.classList.add('hidden-modal');
-                 showToast("Added " + title + " to cart!");
+                 showToast(`Added Size ${sizeText} to cart!`);
              });
 
              // --- Footer Accordion ---
