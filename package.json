@@ -1,0 +1,23 @@
+{
+  "name": "kasmarte",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Domurun/Kasmarte.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Domurun/Kasmarte/issues"
+  },
+  "homepage": "https://github.com/Domurun/Kasmarte#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

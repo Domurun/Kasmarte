@@ -101,8 +101,8 @@
         left: 0;
         width: 100%;
         height: 2px;
-        background: #8b5cf6;
-        box-shadow: 0 0 10px #8b5cf6;
+        background: #2b1ae1;
+        box-shadow: 0 0 10px #2b1ae1;
         animation: scan 2s linear infinite;
         opacity: 0;
       }
@@ -112,6 +112,7 @@
         50% { top: 100%; }
         100% { top: 0%; }
       }
+
     </style>
 </head>
 <body class="bg-brand-white font-body text-brand-black">
@@ -337,52 +338,105 @@
 
     <main>
         <section class="page-section active" data-page="home">
-            <div id="hero-section" class="relative h-[70vh] md:h-screen w-full overflow-hidden bg-black group">
+            <!-- Hero Video -->
+            <div id="hero-section" class="relative h-[80vh] w-full overflow-hidden bg-black group">
                 <video autoplay loop muted playsinline webkit-playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-80 grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
-                    <source src="https://videos.pexels.com/video-files/3205916/3205916-hd_1920_1080_25fps.mp4" type="video/mp4">
+                    <source src="/assets/video/Video.mov" type="video/mp4">
                 </video>
-                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10">
-                    <h1 class="font-header-dramatic text-6xl md:text-9xl lg:text-[10rem] leading-none text-brand-white mb-4 drop-shadow-md">KASMARTE</h1>
-                    <p class="text-lg md:text-xl font-body font-medium max-w-2xl mx-auto mb-10 text-brand-white drop-shadow-md">Discovery. Luxury. Timeless.</p>
-                    <a href="#" data-nav="store" class="inline-block bg-brand-white text-brand-black font-body font-bold text-sm py-3 px-10 rounded-md hover:bg-opacity-80 transition-colors uppercase tracking-wider">Let's take a trip to KasMarte</a>
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10 bg-black/20">
+                    <p class="text-xl md:text-2xl font-body font-light max-w-2xl mx-auto mb-10 text-brand-white drop-shadow-md tracking-wider">SILENT STRENGTH. LOUD STYLE</p>
+                    <a href="#" data-nav="store" class="inline-block bg-white text-brand-black font-body font-bold text-sm py-4 px-12 rounded-full hover:bg-gray-100 transition-colors uppercase tracking-widest shadow-xl transform hover:scale-105 duration-300">LET'S TAKE A TRIP TO KASMARTĒ</a>
                 </div>
             </div>
 
-            <section class="container mx-auto px-6 py-20" id="about">
-                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">The Philosophy</h1>
-                <div class="max-w-3xl mx-auto font-body text-lg leading-relaxed space-y-6 text-center">
-                    <p class="text-xl">Handcrafted in our studio. We unite artisan tradition with modern design and fair pricing.</p>
-                    <div class="bg-gray-100 rounded-lg overflow-hidden aspect-video my-8">
-                        <img src="https://images.unsplash.com/photo-1603400521630-9f2de124b33b?auto=format&fit=crop&w=1200&q=80" alt="Studio" class="w-full h-full object-cover">
+            <!-- USP Bar -->
+            <div class="bg-brand-black text-brand-white py-8">
+                <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-center text-sm uppercase tracking-widest font-light">
+                    <div class="flex items-center justify-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/></svg>
+                        <span>Handcrafted in Patience</span>
                     </div>
-                    <p>Each piece is designed and crafted in our small studio, focusing on natural materials and the quiet confidence of a perfect fit.</p>
+                    <div class="flex items-center justify-center gap-3 text-ai-accent">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        <span>AI Virtual Stylist</span>
+                    </div>
+                    <div class="flex items-center justify-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>Sustainable Materials</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Feature Spotlight -->
+            <section class="bg-gray-50 py-24 overflow-hidden">
+                <div class="container mx-auto px-6">
+                    <div class="flex flex-col md:flex-row items-center gap-16">
+                        <div class="w-full md:w-1/2 relative group cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()">
+                            <div class="absolute inset-0 bg-gradient-to-r from-ai-accent to-purple-400 opacity-20 blur-2xl rounded-full transform -translate-x-10 translate-y-10 group-hover:opacity-30 transition-opacity"></div>
+                            <div class="relative bg-white p-6 rounded-2xl shadow-xl border border-gray-100 transform group-hover:scale-[1.02] transition-transform duration-500">
+                                <div class="absolute top-4 right-4 animate-pulse">
+                                    <span class="inline-flex rounded-full h-3 w-3 bg-ai-accent"></span>
+                                </div>
+                                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" class="w-full h-96 object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-700">
+                                <div class="mt-4 flex justify-between items-center text-sm font-bold">
+                                    <span>SCAN COMPLETE</span>
+                                    <span class="text-ai-accent">98% FIT MATCH</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/2 space-y-8">
+                            <h2 class="font-header-dramatic text-5xl md:text-7xl leading-tight">Stop Guessing.<br>Start <span class="text-transparent bg-clip-text bg-gradient-to-r from-ai-accent to-purple-600">Fitting.</span></h2>
+                            <p class="text-lg text-gray-600 leading-relaxed">
+                                Experience the future of fashion with our AI Virtual Stylist. Upload a photo, set your fit preference, and watch as our algorithm maps the fabric to your unique silhouette. No more returns. Just the perfect fit, every time.
+                            </p>
+                            <a href="#" data-nav="store" class="inline-flex items-center gap-3 border-b-2 border-brand-black pb-2 text-lg font-bold hover:text-ai-accent hover:border-ai-accent transition-colors">
+                                Try Virtual Fitting Room
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <section class="w-full px-6 pb-20">
-                <h3 class="font-header-dramatic text-4xl text-center mb-12">Featured Looks</h3>
+            <!-- Featured Looks -->
+            <section class="w-full px-6 py-24 bg-white">
+                <h3 class="font-header-dramatic text-4xl text-center mb-16">Featured Looks</h3>
                 <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="home-teaser cursor-pointer group">
-                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]">
-                            <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                        <div class="bg-gray-50 overflow-hidden mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-105">
                         </div>
-                        <h4 class="font-body font-bold text-lg text-center">The Tailored Series</h4>
+                        <h4 class="font-body font-bold text-lg text-center tracking-wide">The Tailored Series</h4>
+                        <p class="text-center text-xs text-gray-500 mt-2 uppercase tracking-widest">Office / Evening</p>
                     </div>
                     <div class="home-teaser cursor-pointer group">
-                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]">
-                            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                        <div class="bg-gray-50 overflow-hidden mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-105">
                         </div>
-                        <h4 class="font-body font-bold text-lg text-center">Leather Essentials</h4>
+                        <h4 class="font-body font-bold text-lg text-center tracking-wide">Leather Essentials</h4>
+                        <p class="text-center text-xs text-gray-500 mt-2 uppercase tracking-widest">Travel / Daily</p>
                     </div>
                     <div class="home-teaser cursor-pointer group">
-                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]">
-                            <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                        <div class="bg-gray-50 overflow-hidden mb-4 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-105">
                         </div>
-                        <h4 class="font-body font-bold text-lg text-center">Evening Silk</h4>
+                        <h4 class="font-body font-bold text-lg text-center tracking-wide">Evening Silk</h4>
+                        <p class="text-center text-xs text-gray-500 mt-2 uppercase tracking-widest">Gala / Night</p>
                     </div>
                 </div>
-                <div class="text-center mt-12">
-                    <button data-nav="lookbook" class="border-b border-brand-black pb-1 hover:opacity-60 transition-opacity font-bold uppercase text-sm">View Full Lookbook</button>
+            </section>
+
+            <!-- Philosophy Section (Compact) -->
+            <section class="container mx-auto px-6 py-24 flex flex-col md:flex-row items-center gap-12">
+                <div class="w-full md:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1603400521630-9f2de124b33b?auto=format&fit=crop&w=1200&q=80" alt="Studio" class="w-full h-auto grayscale hover:grayscale-0 transition-all duration-700">
+                </div>
+                <div class="w-full md:w-1/2 space-y-6">
+                    <h2 class="font-header-dramatic text-5xl">The Atelier</h2>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        We unite artisan tradition with modern design. Each piece is designed and crafted in our small studio, focusing on natural materials and the quiet confidence of a perfect fit. We believe that true luxury lies in the details you can feel, not just the ones you can see.
+                    </p>
+                    <button data-nav="lookbook" class="text-brand-black border-b border-brand-black pb-1 font-bold uppercase tracking-wider hover:opacity-60 transition-opacity">Explore Our World</button>
                 </div>
             </section>
         </section>
