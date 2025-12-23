@@ -22,6 +22,7 @@
                         'brand-white': '#FFFFFF',
                         'paystack': '#0BA4DB',
                         'ai-accent': '#8b5cf6', // Violet for AI features
+                        'burgundy': '#800020', // New Burgundy color
                     },
                     fontFamily: {
                         header: ['Oswald', 'sans-serif'], 
@@ -343,27 +344,16 @@
                 <video autoplay loop muted playsinline webkit-playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-80 grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
                     <source src="/assets/video/Video.mov" type="video/mp4">
                 </video>
-                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10 bg-black/20">
-                    <p class="text-xl md:text-2xl font-body font-light max-w-2xl mx-auto mb-10 text-brand-white drop-shadow-md tracking-wider">SILENT STRENGTH. LOUD STYLE</p>
-                    <a href="#" data-nav="store" class="inline-block bg-white text-brand-black font-body font-bold text-sm py-4 px-12 rounded-full hover:bg-gray-100 transition-colors uppercase tracking-widest shadow-xl transform hover:scale-105 duration-300">LET'S TAKE A TRIP TO KASMARTĒ</a>
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10 bg-black/20">
+                    <p class="text-base sm:text-xl md:text-2xl font-body font-light mb-8 md:mb-10 text-brand-white drop-shadow-md tracking-wider whitespace-nowrap">SILENT STRENGTH. LOUD STYLE</p>
+                    <a href="#" data-nav="store" class="inline-block bg-white text-brand-black font-body font-bold text-[10px] sm:text-sm py-4 px-6 sm:px-12 rounded-full hover:bg-gray-100 transition-colors uppercase tracking-widest shadow-xl transform hover:scale-105 duration-300 whitespace-nowrap">LET'S TAKE A TRIP TO KASMARTĒ</a>
                 </div>
             </div>
 
             <!-- USP Bar -->
             <div class="bg-brand-black text-brand-white py-8">
-                <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-center text-sm uppercase tracking-widest font-light">
-                    <div class="flex items-center justify-center gap-3">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/></svg>
-                        <span>Handcrafted in Patience</span>
-                    </div>
-                    <div class="flex items-center justify-center gap-3 text-ai-accent">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                        <span>AI Virtual Stylist</span>
-                    </div>
-                    <div class="flex items-center justify-center gap-3">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span>Sustainable Materials</span>
-                    </div>
+                <div class="container mx-auto px-6 text-center text-sm uppercase tracking-widest font-light">
+                    <span>Handcrafted in Patience</span>
                 </div>
             </div>
 
@@ -380,12 +370,12 @@
                                 <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" class="w-full h-96 object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-700">
                                 <div class="mt-4 flex justify-between items-center text-sm font-bold">
                                     <span>SCAN COMPLETE</span>
-                                    <span class="text-ai-accent">VISUAL ANALYSIS ACTIVE</span>
+                                    <span class="text-burgundy">VISUAL ANALYSIS ACTIVE</span>
                                 </div>
                             </div>
                         </div>
                         <div class="w-full md:w-1/2 space-y-8">
-                            <h2 class="font-header-dramatic text-5xl md:text-7xl leading-tight">Stop Guessing.<br>Start <span class="text-transparent bg-clip-text bg-gradient-to-r from-ai-accent to-purple-600">Fitting.</span></h2>
+                            <h2 class="font-header-dramatic text-5xl md:text-7xl leading-tight">Stop Guessing.<br>Start <span class="text-burgundy">Fitting.</span></h2>
                             <p class="text-lg text-gray-600 leading-relaxed">
                                 Experience the future of fashion with our AI Virtual Stylist. Upload a photo and let our advanced visual model analyze your proportions for the perfect size recommendation, and generate a photorealistic preview of you wearing the collection.
                             </p>
@@ -725,7 +715,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- 0. AI CONFIGURATION ---
-            const apiKey = "AIzaSyAP6HbzrIH6apaKMGp5xum2gE3E-WPEf8Q"; // API Key provided by environment
+            // Set this to TRUE when you deploy with your index.js backend
+            const USE_BACKEND_PROXY = false; 
+            
+            const apiKey = ""; // API Key provided by environment (only used if USE_BACKEND_PROXY is false)
             let currentProductForAI = null; // Stores currently selected product
 
             // --- 1. DATA-DRIVEN PRODUCTS ---
@@ -1163,6 +1156,23 @@
              
              // 1. Analyze Size (Gemini Text - Visual Analysis)
              async function analyzeSize(base64Image, productName) {
+                // --- OPTION A: PRODUCTION (Backend Proxy) ---
+                if (USE_BACKEND_PROXY) {
+                    try {
+                        const response = await fetch('/api/analyze-size', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ image: base64Image, product: productName })
+                        });
+                        if (!response.ok) throw new Error('Backend error');
+                        return await response.json();
+                    } catch (error) {
+                        console.error("Backend Analysis Failed:", error);
+                        return { body_type: "Analysis Failed", recommended_size: "-", reasoning: "Could not connect to stylist server." };
+                    }
+                }
+
+                // --- OPTION B: DEMO (Client-Side Direct) ---
                 const prompt = `Analyze this image of a person to determine their clothing size. You are a professional tailor.
                 
                 Task: accurately estimate the person's body size (S, M, L, XL, or XXL) for a "${productName}" based on their shoulder width, chest volume, and overall build visible in the photo. 
@@ -1203,6 +1213,24 @@
 
              // 2. Generate Try-On Image (Gemini Image Gen/Edit)
              async function generateTryOn(base64Image, productName) {
+                // --- OPTION A: PRODUCTION (Backend Proxy) ---
+                if (USE_BACKEND_PROXY) {
+                    try {
+                        const response = await fetch('/api/generate-try-on', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ image: base64Image, product: productName })
+                        });
+                        if (!response.ok) throw new Error('Backend error');
+                        const data = await response.json();
+                        return data.image; // Assuming backend returns { image: "data:image..." }
+                    } catch (error) {
+                        console.error("Backend Image Gen Failed:", error);
+                        return null;
+                    }
+                }
+
+                // --- OPTION B: DEMO (Client-Side Direct) ---
                 // Use a creative prompt to "edit" the image content
                 const prompt = `A photorealistic full body shot of the person in this image wearing a ${productName}. High fashion photography style. Keep the person's face and body pose exactly the same, just change the outfit.`;
                 
