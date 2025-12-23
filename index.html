@@ -1158,7 +1158,8 @@
                 // --- OPTION A: PRODUCTION (Backend Proxy) ---
                 if (USE_BACKEND_PROXY) {
                     try {
-                        const response = await fetch('/api/analyze-size', {
+                        const analyzeStyle = firebase.functions().httpsCallable('analyzeStyle');
+const result = await analyzeStyle({ payload: { ... } }); {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ image: base64Image, product: productName })
