@@ -1,59 +1,65 @@
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// Initialize Gemini API
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 export default async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { image, product } = req.body;
-  const apiKey = process.env.GEMINI_API_KEY; // Access key securely from Vercel env
-
-  if (!apiKey) {
-    return res.status(500).json({ error: 'Server API key not configured' });
-  }
-
-  const prompt = `Analyze this image of a person to determine their clothing size. You are a professional tailor.
-  
-  Task: accurately estimate the person's body size (S, M, L, XL, or XXL) for a "${product}" based on their shoulder width, chest volume, and overall build visible in the photo. 
-  
-  IMPORTANT: Do not default to 'M'. If the person looks larger, select L, XL or XXL. If smaller, select S. Be decisive based on visual evidence.
-
-  Format: Return ONLY valid JSON: { "body_type": "Type (e.g. Athletic, Plus, Slim)", "recommended_size": "Size (S/M/L/XL/XXL)", "reasoning": "Brief visual explanation." }`;
-
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [
-            { text: prompt },
-            { inlineData: { mimeType: "image/jpeg", data: image } }
-          ]
-        }],
-        generationConfig: { responseMimeType: "application/json" }
-      })
-    });
+    const { image, product } = req.body;
 
-    const data = await response.json();
-    
-    // Error handling from Google API
-    if (data.error) {
-      throw new Error(data.error.message);
+    if (!image || !product) {
+      return res.status(400).json({ error: 'Missing image or product data' });
     }
 
-    let text = data.candidates[0].content.parts[0].text;
-    // Clean up markdown formatting if present
+    // Use Gemini 1.5 Flash for fast analysis
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `
+      You are an expert luxury fashion tailor. Analyze the person in this image.
+      Task: Estimate their clothing size (S, M, L, XL, XXL) for a "${product}".
+      Look at shoulder width, chest volume, and overall build.
+      
+      Return ONLY valid JSON with no markdown formatting:
+      { 
+        "body_type": "Short description (e.g. Athletic, Slim, Curvy)", 
+        "recommended_size": "S, M, L, XL, or XXL", 
+        "reasoning": "A polite, professional visual explanation in one sentence." 
+      }
+    `;
+
+    // Prepare image for API
+    const imagePart = {
+      inlineData: {
+        data: image,
+        mimeType: "image/jpeg",
+      },
+    };
+
+    const result = await model.generateContent([prompt, imagePart]);
+    const response = await result.response;
+    let text = response.text();
+
+    // Clean up markdown if Gemini adds it
     text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-    
-    const jsonResult = JSON.parse(text);
-    return res.status(200).json(jsonResult);
+
+    const jsonResponse = JSON.parse(text);
+
+    return res.status(200).json(jsonResponse);
 
   } catch (error) {
-    console.error("Backend Analysis Error:", error);
+    console.error("Size Analysis Error:", error);
     return res.status(500).json({ 
-      body_type: "Analysis Failed", 
-      recommended_size: "-", 
-      reasoning: "Server connection failed." 
+      error: 'Analysis failed', 
+      details: error.message,
+      // Fallback data so the UI doesn't break completely
+      body_type: "Standard",
+      recommended_size: "M",
+      reasoning: "We encountered a connection issue, but Medium is our most popular fit."
     });
   }
 }

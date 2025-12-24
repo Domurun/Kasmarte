@@ -1,17 +1,16 @@
 {
-  "name": "kasmarte-stylist",
+  "name": "kasmarte-ai-stylist",
   "version": "1.0.0",
-  "description": "AI Stylist Backend for KasMarte",
-  "main": "index.html",
+  "description": "Luxury Fashion AI Stylist Backend",
+  "main": "api/index.js",
   "scripts": {
-    "start": "serve"
+    "start": "vercel dev"
   },
   "dependencies": {
-    "node-fetch": "^3.3.2"
+    "@google/generative-ai": "^0.1.3",
+    "dotenv": "^16.4.5"
   },
   "engines": {
-    "node": "22.x",
-    "type": "module"
+    "node": "18.x"
   }
-  
 }
