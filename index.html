@@ -6,6 +6,7 @@
     <title>KasMarte | Luxury Fashion & AI Stylist</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Removed Firebase SDKs to resolve Script Error -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -341,7 +342,7 @@
             <!-- Hero Video -->
             <div id="hero-section" class="relative h-[80vh] w-full overflow-hidden bg-black group">
                 <video autoplay loop muted playsinline webkit-playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-80 grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
-                    <source src="https://cdn.pixabay.com/video/2016/09/21/5398-183786499_tiny.mp4" type="video/mp4">
+                    <source src="/assets/video/Video.mov" type="video/mp4">
                 </video>
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10 bg-black/20">
                     <p class="text-base sm:text-xl md:text-2xl font-body font-light mb-8 md:mb-10 text-brand-white drop-shadow-md tracking-wider whitespace-nowrap">SILENT STRENGTH. LOUD STYLE</p>
@@ -715,7 +716,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- 0. AI CONFIGURATION ---
             // Set this to TRUE when you deploy with your index.js backend
-            const USE_BACKEND_PROXY = false; 
+            const USE_BACKEND_PROXY = true; 
             
             const apiKey = ""; // API Key provided by environment (only used if USE_BACKEND_PROXY is false)
             let currentProductForAI = null; // Stores currently selected product
@@ -1158,8 +1159,7 @@
                 // --- OPTION A: PRODUCTION (Backend Proxy) ---
                 if (USE_BACKEND_PROXY) {
                     try {
-                        const analyzeStyle = firebase.functions().httpsCallable('analyzeStyle');
-const result = await analyzeStyle({ payload: { ... } }); {
+                        const response = await fetch('/api/analyze-size', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ image: base64Image, product: productName })
