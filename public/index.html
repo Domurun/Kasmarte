@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KasMarte | Luxury Fashion & AI Sizing</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Oswald:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-black': '#000000',
+                        'brand-white': '#FFFFFF',
+                        'paystack': '#0BA4DB',
+                        'ai-accent': '#8b5cf6',
+                        'burgundy': '#800020',
+                    },
+                    fontFamily: {
+                        header: ['Oswald', 'sans-serif'], 
+                        body: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+      /* --- Custom CSS --- */
+      :root{ --brand-black: #000; --brand-white: #fff; }
+      html,body{height:100%; scroll-behavior: smooth;}
+      body{ font-family: 'Montserrat', sans-serif; color:var(--brand-black); background:var(--brand-white); -webkit-font-smoothing:antialiased; }
+
+      /* Typography */
+      .font-header-dramatic { font-family: 'Oswald', sans-serif; font-weight: 300; text-transform: uppercase; letter-spacing: 0.05em; }
+
+      /* Header Transitions */
+      header { 
+          position: sticky; 
+          top:0; 
+          z-index:40; 
+          background:rgba(255,255,255,0.95); 
+          backdrop-filter: blur(8px); 
+          border-bottom:1px solid rgba(0,0,0,0.06); 
+          transition: transform 0.4s ease-in-out;
+      }
+      header.header-hidden { transform: translateY(-100%); }
+      
+      #brand-text { transition: all 0.5s ease; }
+
+      /* Mobile Menu */
+      #new-menu-overlay { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--brand-white); z-index: 50; opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out; transform: translateY(-10px); }
+      #new-menu-overlay.menu-open { opacity: 1; visibility: visible; transform: translateY(0); }
+
+      /* Cards & Images */
+      .card{background:var(--brand-white);border-radius:8px;overflow:hidden;}
+      .card img{transition:transform .45s ease}
+      .group:hover .card img{transform:scale(1.03)}
+      
+      /* Sections */
+      .page-section{display:none}
+      .page-section.active{display:block}
+      .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+      /* Size Selector */
+      .size-selector input:checked + label { background-color: var(--brand-black); color: var(--brand-white); border-color: var(--brand-black); }
+      .size-selector label:hover { border-color: var(--brand-black); }
+
+      /* Modal */
+      .modal-backdrop { background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); transition: all 0.3s ease; }
+      .hidden-modal { opacity: 0; visibility: hidden; pointer-events: none; }
+      .visible-modal { opacity: 1; visibility: visible; pointer-events: auto; }
+
+      /* Heart Icon Animation */
+      .heart-icon { transition: transform 0.2s, fill 0.2s; pointer-events: none; } 
+      .wishlist-btn:active .heart-icon { transform: scale(0.8); }
+      .heart-filled { fill: #ef4444; color: #ef4444; }
+
+      /* Footer Accordion (Mobile) */
+      .footer-accordion-btn { cursor: pointer; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+      @media (min-width: 768px) {
+          .footer-accordion-btn { cursor: default; }
+          .footer-accordion-btn span { display: none; }
+          .footer-accordion-content { display: block !important; }
+      }
+
+      /* AI Scanner Animation */
+      .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #8b5cf6; box-shadow: 0 0 10px #8b5cf6; animation: scan 2s linear infinite; opacity: 0; }
+      .scanning .scan-line { opacity: 1; }
+      @keyframes scan { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
+      
+      /* Loading Spinner */
+      .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #8b5cf6; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body class="bg-brand-white font-body text-brand-black">
+
+    <div id="auth-toast" class="fixed top-24 left-1/2 transform -translate-x-1/2 bg-brand-black text-white px-6 py-4 rounded shadow-2xl z-50 transition-all duration-300 opacity-0 pointer-events-none text-sm font-bold tracking-wide">
+        Please log in to continue.
+    </div>
+
+    <!-- Size Guide Modal -->
+    <div id="size-guide-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
+        <div class="bg-brand-white w-full max-w-lg mx-4 md:mx-auto p-8 rounded-lg shadow-2xl relative">
+            <button id="close-size-guide" class="absolute top-4 right-4 text-gray-500 hover:text-brand-black transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <h2 class="font-header-dramatic text-3xl text-center mb-6">Size Guide</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm font-body text-left">
+                    <thead class="border-b border-gray-200"><tr><th class="py-2">Size</th><th class="py-2">Chest (cm)</th></tr></thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr><td class="py-2 font-bold">S</td><td class="py-2">88-92</td></tr>
+                        <tr><td class="py-2 font-bold">M</td><td class="py-2">96-100</td></tr>
+                        <tr><td class="py-2 font-bold">L</td><td class="py-2">104-108</td></tr>
+                        <tr><td class="py-2 font-bold">XL</td><td class="py-2">112-116</td></tr>
+                        <tr><td class="py-2 font-bold">XXL</td><td class="py-2">120-124</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Order Modal -->
+    <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
+        <div class="bg-brand-white w-full max-w-md mx-4 p-8 rounded-lg shadow-2xl text-center relative">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <h2 class="font-header-dramatic text-3xl mb-2">Order Confirmed!</h2>
+            <p class="text-gray-600 mb-6">Thank you for shopping with KasMarte. Your order <span class="font-bold text-black" id="order-ref">#KM-0000</span> has been placed.</p>
+            <button id="close-success-modal" class="bg-brand-black text-brand-white font-bold py-3 px-8 rounded-md hover:opacity-90 transition uppercase tracking-wider w-full">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- AI Sizing Modal (UPDATED: No Try-On) -->
+    <div id="ai-tryon-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
+        <div class="bg-brand-white w-full max-w-3xl mx-4 md:mx-auto rounded-lg shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+            <!-- Header -->
+            <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-ai-accent text-white flex items-center justify-center text-xs font-bold">AI</span>
+                    <h2 class="font-header-dramatic text-2xl">KasMarte Size Recommender</h2>
+                </div>
+                <button id="close-ai-modal" class="text-gray-500 hover:text-brand-black transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="flex-grow overflow-y-auto p-6">
+                
+                <!-- Step 1: Upload -->
+                <div id="ai-step-upload" class="flex flex-col items-center justify-center h-full min-h-[300px]">
+                    <div class="text-center max-w-md w-full">
+                        <div class="mx-auto w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        </div>
+                        <h3 class="font-bold text-xl mb-2">Find Your Perfect Fit</h3>
+                        <p class="text-gray-500 mb-6 text-sm">Upload a full-body photo. Our AI analyzes your build to recommend the best size for the <span id="ai-product-name-display" class="font-bold text-black">Product</span>.</p>
+                        
+                        <label class="block w-full cursor-pointer bg-brand-black text-brand-white font-bold py-4 rounded-md hover:opacity-90 transition uppercase tracking-wider text-center relative overflow-hidden group">
+                            <span class="relative z-10">Select Photo</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-ai-accent opacity-0 group-hover:opacity-100 transition-opacity z-0"></div>
+                            <input type="file" id="ai-file-input" accept="image/*" class="hidden">
+                        </label>
+                        <p class="text-xs text-gray-400 mt-4">Images are processed securely by our AI Stylist.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2: Processing -->
+                <div id="ai-step-processing" class="hidden flex flex-col items-center justify-center h-full min-h-[300px]">
+                    <div class="relative w-64 h-80 bg-gray-200 rounded-lg overflow-hidden mb-6 scanning">
+                        <img id="ai-user-preview" class="w-full h-full object-cover opacity-80" src="">
+                        <div class="scan-line"></div>
+                        <div class="absolute inset-0 border-2 border-ai-accent opacity-50 rounded-lg"></div>
+                        <div class="absolute bottom-2 left-2 right-2 bg-black/60 text-white text-xs p-2 rounded backdrop-blur-sm text-center" id="ai-status-detail">Initializing...</div>
+                    </div>
+                    <h3 id="ai-status-text" class="font-header-dramatic text-2xl animate-pulse">Consulting Stylist...</h3>
+                </div>
+
+                <!-- Step 3: Result (Sizing Only) -->
+                <div id="ai-step-result" class="hidden h-full min-h-[300px] flex flex-col items-center justify-center">
+                    <div class="bg-purple-50 p-8 rounded-lg border border-purple-100 w-full max-w-md text-center">
+                        <h3 class="font-header-dramatic text-3xl mb-4 text-ai-accent">Stylist Recommendation</h3>
+                        <div id="ai-sizing-result">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 space-y-3 w-full max-w-md">
+                        <button id="ai-add-to-cart" class="w-full bg-brand-black text-brand-white font-bold py-3 rounded-md hover:opacity-90 transition uppercase tracking-wider flex justify-center items-center gap-2">
+                            Add Recommended Size to Cart
+                        </button>
+                        <button id="ai-try-another" class="w-full border border-gray-300 text-gray-600 font-bold py-3 rounded-md hover:bg-gray-50 transition uppercase tracking-wider text-xs">
+                            Analyze Different Photo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="new-menu-overlay" class="bg-brand-white z-50">
+        <button id="menu-close-inner" class="absolute top-6 right-6 text-brand-black hover:opacity-50 transition-opacity p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+        <ul class="flex flex-col items-center space-y-12 mt-10">
+            <li><a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity" data-nav="home" aria-label="Home">Home</a></li>
+            <li><a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity" data-nav="store" aria-label="Collection">Store</a></li>
+            <li><a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity" data-nav="lookbook" aria-label="Lookbook">Lookbook</a></li>
+            <li><a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity" data-nav="wishlist" aria-label="Wishlist">Wishlist</a></li>
+            <li><a href="#" class="flex flex-col items-center hover:opacity-70 transition-opacity" data-nav="account" aria-label="Account">Account</a></li>
+        </ul>
+    </div>
+
+    <header id="main-header" class="bg-brand-white bg-opacity-90 backdrop-blur-sm shadow-sm sticky top-0 z-40 w-full transition-transform duration-500">
+        <nav class="w-full px-6 md:px-12 py-4 flex justify-between items-center relative">
+            <div class="hidden md:flex justify-start items-center space-x-8">
+                <a href="#" class="hover:opacity-60 transition-opacity" data-nav="home">Home</a>
+                <a href="#" class="hover:opacity-60 transition-opacity" data-nav="store">Store</a>
+                <a href="#" class="hover:opacity-60 transition-opacity" data-nav="lookbook">Lookbook</a>
+            </div>
+            
+            <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <a href="#" class="block hover:opacity-80 transition-opacity duration-300" data-nav="home">
+                    <svg id="main-logo" viewBox="0 0 100 24" class="h-6 sm:h-7 w-auto transition-all duration-300">
+                        <text id="brand-text" x="50" y="20" font-family="Oswald, sans-serif" font-size="20" font-weight="300" fill="#000000" letter-spacing="0.08em" text-anchor="middle">KASMARTE</text>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="flex items-center justify-end space-x-6">
+                <button id="wishlist-nav-btn" class="hidden md:block hover:opacity-60 transition-opacity relative" data-nav="wishlist">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                    <span id="wishlist-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center opacity-0 transition-opacity">0</span>
+                </button>
+
+                <a href="#" class="hidden md:block hover:opacity-60 transition-opacity" data-nav="account">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                </a>
+
+                <button class="md:hidden hover:opacity-60 transition-opacity z-50" id="menu-toggle-btn">
+                    <svg id="icon-plus" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+                    <svg id="icon-minus" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
+                </button>
+
+                <button id="cart-btn" class="hover:opacity-60 transition-opacity relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-brand-black text-brand-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center opacity-0 transition-opacity">0</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-section active" data-page="home">
+            <div id="hero-section" class="relative h-[80vh] w-full overflow-hidden bg-black group">
+                <video autoplay loop muted playsinline webkit-playsinline class="absolute top-0 left-0 w-full h-full object-cover opacity-80 grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
+                    <!-- Placeholder video, would be hosted asset in real deploy -->
+                    <source src="/assets/video/Video.mov" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10 bg-black/20">
+                    <p class="text-base sm:text-xl md:text-2xl font-body font-light mb-8 md:mb-10 text-brand-white drop-shadow-md tracking-wider whitespace-nowrap">SILENT STRENGTH. LOUD STYLE</p>
+                    <a href="#" data-nav="store" class="inline-block bg-white text-brand-black font-body font-bold text-[10px] sm:text-sm py-4 px-6 sm:px-12 rounded-full hover:bg-gray-100 transition-colors uppercase tracking-widest shadow-xl transform hover:scale-105 duration-300 whitespace-nowrap">LET'S TAKE A TRIP TO KASMARTĒ</a>
+                </div>
+            </div>
+
+            <div class="bg-brand-black text-brand-white py-8">
+                <div class="container mx-auto px-6 text-center text-sm uppercase tracking-widest font-light">
+                    <span>Handcrafted in Patience</span>
+                </div>
+            </div>
+
+            <section class="bg-gray-50 py-24 overflow-hidden">
+                <div class="container mx-auto px-6">
+                    <div class="flex flex-col md:flex-row items-center gap-16">
+                        <div class="w-full md:w-1/2 relative group cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()">
+                            <div class="absolute inset-0 bg-gradient-to-r from-ai-accent to-purple-400 opacity-20 blur-2xl rounded-full transform -translate-x-10 translate-y-10 group-hover:opacity-30 transition-opacity"></div>
+                            <div class="relative bg-white p-6 rounded-2xl shadow-xl border border-gray-100 transform group-hover:scale-[1.02] transition-transform duration-500">
+                                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" class="w-full h-96 object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-700">
+                                <div class="mt-4 flex justify-between items-center text-sm font-bold">
+                                    <span>SCAN COMPLETE</span>
+                                    <span class="text-burgundy">SIZE ANALYSIS ACTIVE</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/2 space-y-8">
+                            <h2 class="font-header-dramatic text-5xl md:text-7xl leading-tight">Stop Guessing.<br>Start <span class="text-burgundy">Fitting.</span></h2>
+                            <p class="text-lg text-gray-600 leading-relaxed">
+                                Experience the future of fashion sizing. Upload a photo and let our advanced visual model analyze your proportions for the perfect size recommendation.
+                            </p>
+                            <a href="#" data-nav="store" class="inline-flex items-center gap-3 border-b-2 border-brand-black pb-2 text-lg font-bold hover:text-ai-accent hover:border-ai-accent transition-colors">
+                                Try Size Recommender
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="page-section" data-page="lookbook">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">Lookbook</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="aspect-[4/5] bg-gray-100 overflow-hidden cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()"><img src="https://images.unsplash.com/photo-1559551409-dadc959f76b8?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"></div>
+                    <div class="aspect-[4/5] bg-gray-100 overflow-hidden cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()"><img src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"></div>
+                </div>
+                <div class="text-center mt-16">
+                    <a href="#" data-nav="store" class="inline-block bg-brand-black text-brand-white font-body font-bold text-sm py-3 px-10 rounded-md hover:opacity-80 transition-colors uppercase tracking-wider">Shop the Collection</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="store">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-12">Collection</h1>
+                <div class="max-w-2xl mx-auto mb-16 relative w-full">
+                    <input type="text" id="store-search" placeholder="Search for items..." class="w-full border-b border-brand-black bg-transparent py-3 pl-10 focus:outline-none focus:border-b-2 font-body text-center">
+                    <svg class="h-5 w-5 absolute left-2 top-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+                <div id="store-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in">
+                    <!-- Products injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="wishlist">
+             <div class="container mx-auto px-6 py-12 md:py-20">
+                <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-12">Your Wishlist</h1>
+                <div id="wishlist-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="col-span-full text-center text-gray-500 py-20">Your wishlist is empty.</div>
+                </div>
+             </div>
+        </section>
+
+        <!-- ACCOUNT: LOGIN / SIGNUP -->
+        <section class="page-section" data-page="account">
+            <div class="container mx-auto px-6 py-12 md:py-24">
+                <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden">
+                    
+                    <div id="login-form-container" class="animate-fade-in">
+                        <h1 class="font-header-dramatic text-4xl text-center mb-8">Log In</h1>
+                        <form class="space-y-4" onsubmit="event.preventDefault(); document.getElementById('login-btn-sim').click();">
+                            <input type="email" placeholder="Email Address" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                            <input type="password" placeholder="Password" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                            <div class="g-recaptcha mb-4" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                            <button id="login-btn-sim" class="w-full bg-brand-black text-brand-white py-3 rounded-lg font-bold hover:opacity-90 transition uppercase tracking-wider">Log In</button>
+                        </form>
+                        <p class="text-center text-sm text-gray-500 mt-4">Don't have an account? <button id="go-to-signup" class="underline text-brand-black font-medium">Sign Up</button></p>
+                    </div>
+
+                    <div id="signup-form-container" class="hidden animate-fade-in">
+                        <h1 class="font-header-dramatic text-4xl text-center mb-8">Sign Up</h1>
+                        <form class="space-y-4">
+                            <input type="text" placeholder="Full Name" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                            <input type="email" placeholder="Email Address" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                            <input type="password" placeholder="Password" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                            <button class="w-full bg-brand-black text-brand-white py-3 rounded-lg font-bold hover:opacity-90 transition uppercase tracking-wider">Create Account</button>
+                        </form>
+                        <p class="text-center text-sm text-gray-500 mt-4">Already have an account? <button id="go-to-login" class="underline text-brand-black font-medium">Log In</button></p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: PROFILE PAGE -->
+        <section class="page-section" data-page="profile">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <h1 class="font-header-dramatic text-5xl md:text-6xl text-center mb-12">My Profile</h1>
+                
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Sidebar -->
+                    <div class="col-span-1">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-header font-bold" id="profile-avatar">K</div>
+                                <div>
+                                    <h3 class="font-bold text-lg" id="sidebar-name">User Name</h3>
+                                    <p class="text-xs text-gray-500">Member since 2025</p>
+                                </div>
+                            </div>
+                            <nav class="space-y-2">
+                                <button class="w-full text-left p-3 rounded bg-gray-50 font-bold">Personal Info</button>
+                                <button class="w-full text-left p-3 rounded hover:bg-gray-50 transition text-gray-600" onclick="showPage('wishlist')">Wishlist</button>
+                                <button class="w-full text-left p-3 rounded hover:bg-gray-50 transition text-gray-600" id="logout-btn">Log Out</button>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Main Form -->
+                    <div class="col-span-1 md:col-span-2">
+                        <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+                            <h2 class="font-header text-2xl mb-6 uppercase border-b pb-4">Edit Personal Info</h2>
+                            <form id="profile-form" class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-xs uppercase font-bold text-gray-500 mb-2">First Name</label>
+                                        <input type="text" id="p-firstname" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs uppercase font-bold text-gray-500 mb-2">Last Name</label>
+                                        <input type="text" id="p-lastname" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-500 mb-2">Email Address</label>
+                                    <input type="email" id="p-email" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs uppercase font-bold text-gray-500 mb-2">Shipping Address</label>
+                                    <textarea id="p-address" rows="3" class="w-full p-3 bg-gray-50 border border-gray-200 rounded focus:border-brand-black focus:outline-none transition"></textarea>
+                                </div>
+
+                                <div class="flex justify-end pt-4">
+                                    <button type="submit" class="bg-brand-black text-brand-white font-bold py-3 px-8 rounded hover:opacity-90 transition uppercase tracking-wider">Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="product-detail">
+            <div class="container mx-auto px-6 py-12 md:py-20">
+                <div class="mb-8 text-sm flex items-center">
+                    <button class="text-gray-500 hover:text-brand-black mr-2" onclick="document.querySelector('[data-nav=store]').click()">← Back to Collection</button>
+                    <span class="mx-2 text-gray-300">/</span> 
+                    <span id="detail-breadcrumb-name" class="font-medium">Product</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
+                    <div class="bg-gray-50 rounded-lg overflow-hidden aspect-[3/4]"><img id="detail-image" src="" class="w-full h-full object-cover"></div>
+                    <div class="flex flex-col justify-center">
+                        <h1 id="detail-title" class="font-header-dramatic text-5xl mb-4">Product</h1>
+                        <p id="detail-price" class="text-2xl font-bold mb-8">$0.00</p>
+                        <p class="mb-8 text-gray-600">Crafted with the finest materials in our Florence atelier. Timeless elegance and modern utility.</p>
+                        
+                        <div class="mb-8">
+                            <div class="flex justify-between items-center mb-3">
+                                <label class="font-bold uppercase text-sm">Size</label>
+                                <button id="size-guide-trigger" class="text-xs underline text-gray-500">Size Guide</button>
+                            </div>
+                            <div class="flex gap-3 size-selector">
+                                <div class="relative"><input type="radio" name="size" id="size-s" class="peer sr-only"><label for="size-s" class="block w-12 h-12 flex items-center justify-center border border-gray-300 cursor-pointer text-sm">S</label></div>
+                                <div class="relative"><input type="radio" name="size" id="size-m" class="peer sr-only" checked><label for="size-m" class="block w-12 h-12 flex items-center justify-center border border-gray-300 cursor-pointer text-sm">M</label></div>
+                                <div class="relative"><input type="radio" name="size" id="size-l" class="peer sr-only"><label for="size-l" class="block w-12 h-12 flex items-center justify-center border border-gray-300 cursor-pointer text-sm">L</label></div>
+                                <div class="relative"><input type="radio" name="size" id="size-xl" class="peer sr-only"><label for="size-xl" class="block w-12 h-12 flex items-center justify-center border border-gray-300 cursor-pointer text-sm">XL</label></div>
+                                <div class="relative"><input type="radio" name="size" id="size-xxl" class="peer sr-only"><label for="size-xxl" class="block w-12 h-12 flex items-center justify-center border border-gray-300 cursor-pointer text-sm">XXL</label></div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-4">
+                            <div class="flex gap-4">
+                                <button id="add-to-cart-btn" class="flex-grow bg-brand-black text-brand-white font-bold text-sm py-4 rounded-md hover:opacity-80 transition uppercase tracking-wider">Add to Cart</button>
+                                <button id="detail-wishlist-btn" class="border border-gray-300 text-gray-400 hover:text-red-500 hover:border-red-200 rounded-md p-4 transition-colors" aria-label="Add to wishlist">
+                                    <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                                </button>
+                            </div>
+                            <!-- AI Button -->
+                            <button id="ai-trigger-btn" class="w-full border-2 border-ai-accent text-ai-accent hover:bg-ai-accent hover:text-white font-bold text-sm py-3 rounded-md transition uppercase tracking-wider flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                Find My Size (AI)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-20 border-t border-gray-100 pt-16">
+                    <h3 class="font-header-dramatic text-3xl text-center mb-12">You May Also Like</h3>
+                    <div id="related-products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="checkout">
+            <div class="container mx-auto px-6 py-12">
+                <h1 class="font-header-dramatic text-5xl text-center mb-12">Checkout</h1>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
+                    <div class="lg:col-span-2 space-y-12">
+                        <div>
+                            <h2 class="font-header text-2xl mb-6 uppercase">Shipping & Contact</h2>
+                            <form class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" placeholder="First Name" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                                    <input type="text" placeholder="Last Name" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                                </div>
+                                <input type="email" placeholder="Email" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                                <input type="text" placeholder="Address" class="p-3 bg-gray-50 border border-gray-200 w-full">
+                            </form>
+                        </div>
+                        <div>
+                            <h2 class="font-header text-2xl mb-6 uppercase">Payment</h2>
+                            <div class="space-y-4">
+                                <div class="border border-gray-200 rounded p-4 flex items-center gap-3 cursor-pointer hover:border-black">
+                                    <input type="radio" name="payment" id="pay-card" checked class="accent-black">
+                                    <label for="pay-card" class="font-bold flex-grow cursor-pointer">Credit / Debit Card</label>
+                                </div>
+                                <div class="border border-gray-200 rounded p-4 flex items-center gap-3 cursor-pointer hover:border-paystack">
+                                    <input type="radio" name="payment" id="pay-paystack" class="accent-paystack">
+                                    <label for="pay-paystack" class="font-bold flex-grow cursor-pointer text-paystack">Paystack</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-1">
+                        <div class="bg-gray-50 p-8 rounded-lg border border-gray-200 sticky top-32">
+                            <h2 class="font-header text-xl mb-6 uppercase">Order Summary</h2>
+                            <div id="checkout-items-container" class="space-y-4 mb-6 border-b pb-6"></div>
+                            <div class="flex justify-between font-bold text-xl pt-2 mb-6">
+                                <span>Total</span>
+                                <span id="checkout-total">$0</span>
+                            </div>
+                            <button id="place-order-btn" class="w-full bg-brand-black text-brand-white font-bold py-4 rounded-md hover:opacity-90 transition uppercase tracking-wider">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-brand-black border-opacity-20 mt-12">
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center text-sm text-brand-black text-opacity-70">
+                &copy; 2025 KasMarte. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- 0. CONFIGURATION ---
+            let currentProductForAI = null;
+
+            // --- 1. DATA ---
+            const products = [
+                { id: 1, name: "Linen Shirt", price: 120, img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80" },
+                { id: 2, name: "Chino Trousers", price: 160, img: "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=800&q=80" },
+                { id: 3, name: "Cashmere Sweater", price: 250, img: "https://images.unsplash.com/photo-1610652492500-ded49ceeb378?auto=format&fit=crop&w=800&q=80" },
+                { id: 4, name: "The Jacket", price: 280, img: "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?auto=format&fit=crop&w=800&q=80" },
+                { id: 5, name: "Leather Bag", price: 195, img: "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=800&q=80" },
+                { id: 6, name: "Silk Dress", price: 310, img: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80" }
+            ];
+
+            // --- 2. LOCAL STORAGE ---
+            function loadState(key, defaultVal) {
+                const stored = localStorage.getItem('kasmarte_' + key);
+                return stored ? JSON.parse(stored) : defaultVal;
+            }
+            function saveState(key, val) {
+                localStorage.setItem('kasmarte_' + key, JSON.stringify(val));
+            }
+
+            // --- 3. STATE ---
+            let isLoggedIn = loadState('isLoggedIn', false); 
+            let cart = loadState('cart', []);
+            let wishlist = loadState('wishlist', []);
+            let userProfile = loadState('profile', { firstName: 'User', lastName: 'Name', email: '', address: '' });
+
+            // --- 4. DOM ELEMENTS ---
+            const pages = document.querySelectorAll('.page-section');
+            const cartCountEl = document.getElementById('cart-count');
+            const wishlistCountEl = document.getElementById('wishlist-count');
+            const authToast = document.getElementById('auth-toast');
+
+            // --- 5. CORE FUNCTIONS ---
+            function showToast(message) {
+                authToast.textContent = message;
+                authToast.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => authToast.classList.add('opacity-0', 'pointer-events-none'), 3000);
+            }
+
+            function showPage(pageName) {
+                pages.forEach(p => p.classList.remove('active'));
+                const target = document.querySelector(`.page-section[data-page="${pageName}"]`);
+                if(target) target.classList.add('active');
+                
+                if(pageName === 'checkout') renderCheckout();
+                if(pageName === 'wishlist') renderWishlist();
+                if(pageName === 'profile') renderProfile();
+                
+                window.scrollTo(0, 0);
+                document.getElementById('new-menu-overlay').classList.remove('menu-open');
+            }
+
+            // --- 6. STORE RENDERING ---
+            function renderStoreGrid() {
+                const grid = document.getElementById('store-grid');
+                grid.innerHTML = '';
+                products.forEach(p => {
+                    const isWishlisted = wishlist.some(w => w.name === p.name);
+                    const heartClass = isWishlisted ? 'heart-filled text-red-500' : 'text-gray-400';
+                    const filledClass = isWishlisted ? 'heart-filled' : '';
+
+                    const html = `
+                    <div class="product-card store-item group cursor-pointer relative" data-name="${p.name.toLowerCase()}" data-price="${p.price}" data-id="${p.id}">
+                        <button class="wishlist-btn absolute top-3 right-3 z-20 ${heartClass} hover:text-red-500 hover:scale-110 transition-all p-2 rounded-full bg-white bg-opacity-80">
+                            <svg class="h-6 w-6 heart-icon ${filledClass}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                        </button>
+                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="${p.img}" class="w-full h-full object-cover grayscale group-hover:grayscale-0"></div>
+                        <h4 class="font-body font-bold text-lg">${p.name}</h4><p class="opacity-70">$${p.price}</p>
+                    </div>`;
+                    grid.insertAdjacentHTML('beforeend', html);
+                });
+            }
+            renderStoreGrid();
+            updateCart();
+            updateWishlistCount();
+
+            // --- 7. NAVIGATION ---
+            document.querySelectorAll('[data-nav]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const navTarget = link.getAttribute('data-nav');
+                    if ((navTarget === 'wishlist' || navTarget === 'account') && !isLoggedIn && navTarget !== 'home') {
+                         if(navTarget === 'account') showPage('account');
+                         else {
+                             showPage('account');
+                             showToast("Please log in first.");
+                         }
+                         return;
+                    }
+                    if(navTarget === 'account' && isLoggedIn) {
+                        showPage('profile');
+                    } else {
+                        showPage(navTarget);
+                    }
+                });
+            });
+
+            // --- 8. AUTH & PROFILE LOGIC ---
+            document.getElementById('go-to-signup').addEventListener('click', () => {
+                document.getElementById('login-form-container').classList.add('hidden');
+                document.getElementById('signup-form-container').classList.remove('hidden');
+            });
+            document.getElementById('go-to-login').addEventListener('click', () => {
+                document.getElementById('signup-form-container').classList.add('hidden');
+                document.getElementById('login-form-container').classList.remove('hidden');
+            });
+
+            document.getElementById('login-btn-sim').addEventListener('click', () => {
+                isLoggedIn = true;
+                saveState('isLoggedIn', true);
+                showToast("Logged in successfully!");
+                showPage('profile'); 
+            });
+
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                isLoggedIn = false;
+                saveState('isLoggedIn', false);
+                showToast("Logged out.");
+                showPage('home');
+            });
+
+            function renderProfile() {
+                document.getElementById('sidebar-name').textContent = userProfile.firstName + " " + userProfile.lastName;
+                document.getElementById('profile-avatar').textContent = userProfile.firstName.charAt(0);
+                
+                document.getElementById('p-firstname').value = userProfile.firstName || '';
+                document.getElementById('p-lastname').value = userProfile.lastName || '';
+                document.getElementById('p-email').value = userProfile.email || '';
+                document.getElementById('p-address').value = userProfile.address || '';
+            }
+
+            document.getElementById('profile-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                userProfile = {
+                    firstName: document.getElementById('p-firstname').value,
+                    lastName: document.getElementById('p-lastname').value,
+                    email: document.getElementById('p-email').value,
+                    address: document.getElementById('p-address').value
+                };
+                saveState('profile', userProfile);
+                renderProfile(); // Update sidebar
+                showToast("Profile Updated!");
+            });
+
+            // --- 9. PRODUCT DETAIL & WISHLIST ---
+            function openProduct(card) {
+                const pid = card.dataset.id;
+                let productData = products.find(p => p.id == pid) || { 
+                    name: card.querySelector('h4').textContent, 
+                    price: card.dataset.price, 
+                    img: card.querySelector('img').src 
+                };
+                
+                currentProductForAI = productData;
+                document.getElementById('ai-product-name-display').textContent = productData.name;
+                document.getElementById('detail-image').src = productData.img;
+                document.getElementById('detail-title').textContent = productData.name;
+                document.getElementById('detail-price').textContent = '$' + productData.price;
+                document.getElementById('detail-breadcrumb-name').textContent = productData.name;
+
+                // Reset Buttons
+                const btn = document.getElementById('add-to-cart-btn');
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+                
+                newBtn.addEventListener('click', () => {
+                    if (!isLoggedIn) { showPage('account'); showToast("Please log in to add to cart."); return; }
+                    const size = document.querySelector('input[name="size"]:checked').id.replace('size-','').toUpperCase();
+                    cart.push({name: productData.name, price: parseInt(productData.price), size: size, img: productData.img});
+                    saveState('cart', cart);
+                    updateCart();
+                    showToast("Added to Cart");
+                });
+                
+                showPage('product-detail');
+            }
+
+            function toggleWishlist(btn, product) {
+                if (!isLoggedIn) { showPage('account'); showToast("Please log in."); return; }
+                const icon = btn.querySelector('svg');
+                const index = wishlist.findIndex(item => item.name === product.name);
+                
+                if (index > -1) {
+                    wishlist.splice(index, 1);
+                    icon.classList.remove('heart-filled');
+                    btn.classList.remove('text-red-500');
+                    if(!btn.id.includes('detail')) btn.classList.add('text-gray-400');
+                } else {
+                    wishlist.push(product);
+                    icon.classList.add('heart-filled');
+                    btn.classList.add('text-red-500');
+                    btn.classList.remove('text-gray-400');
+                }
+                saveState('wishlist', wishlist);
+                updateWishlistCount();
+            }
+
+            function updateWishlistCount() {
+                wishlistCountEl.textContent = wishlist.length;
+                wishlistCountEl.classList.toggle('opacity-0', wishlist.length === 0);
+            }
+
+            function renderWishlist() {
+                const container = document.getElementById('wishlist-container');
+                container.innerHTML = '';
+                if (wishlist.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-20">Your wishlist is empty.</div>';
+                    return;
+                }
+                wishlist.forEach(item => {
+                    container.innerHTML += `
+                    <div class="product-card cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()">
+                        <div class="bg-gray-50 rounded-lg overflow-hidden mb-4 aspect-[3/4]"><img src="${item.img}" class="w-full h-full object-cover"></div>
+                        <h4 class="font-body font-bold text-lg">${item.name}</h4><p class="opacity-70">$${item.price}</p>
+                    </div>`;
+                });
+            }
+
+            function updateCart() {
+                cartCountEl.textContent = cart.length;
+                cartCountEl.classList.remove('opacity-0');
+            }
+
+            function renderCheckout() {
+                const container = document.getElementById('checkout-items-container');
+                container.innerHTML = '';
+                let total = 0;
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    container.innerHTML += `
+                        <div class="flex gap-4 border-b border-gray-100 pb-4">
+                            <div class="w-16 h-20 bg-gray-100 rounded overflow-hidden"><img src="${item.img}" class="w-full h-full object-cover"></div>
+                            <div>
+                                <p class="font-bold text-sm">${item.name}</p>
+                                <p class="text-xs text-gray-500">Size: ${item.size}</p>
+                                <p class="text-sm font-bold mt-1">$${item.price}</p>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById('checkout-total').textContent = '$' + total;
+            }
+
+            // Click Handlers
+            document.addEventListener('click', (e) => {
+                const wishlistBtn = e.target.closest('.wishlist-btn');
+                if (wishlistBtn) {
+                    e.stopPropagation(); e.preventDefault();
+                    const card = wishlistBtn.closest('.store-item');
+                    const img = card.querySelector('img').src;
+                    const title = card.querySelector('h4').textContent;
+                    const price = card.dataset.price;
+                    toggleWishlist(wishlistBtn, {name: title, price: price, img: img});
+                    return;
+                }
+                const card = e.target.closest('.store-item');
+                if(card) {
+                    e.preventDefault();
+                    openProduct(card);
+                    window.scrollTo(0,0);
+                }
+            });
+            
+            document.getElementById('cart-btn').addEventListener('click', () => {
+                if(!isLoggedIn) { showPage('account'); showToast("Please log in."); return; }
+                showPage('checkout');
+            });
+            
+            document.getElementById('place-order-btn').addEventListener('click', () => {
+                if(cart.length === 0) return;
+                cart = []; saveState('cart', cart); updateCart(); renderCheckout();
+                document.getElementById('success-modal').classList.replace('hidden-modal', 'visible-modal');
+            });
+            document.getElementById('close-success-modal').addEventListener('click', () => {
+                document.getElementById('success-modal').classList.replace('visible-modal', 'hidden-modal');
+                showPage('store');
+            });
+
+            // --- AI MODAL LOGIC (Simplified: No Try-On, Just Sizing) ---
+            const aiModal = document.getElementById('ai-tryon-modal');
+            const aiTriggerBtn = document.getElementById('ai-trigger-btn');
+            const aiCloseBtn = document.getElementById('close-ai-modal');
+            const aiFileInput = document.getElementById('ai-file-input');
+            const stepUpload = document.getElementById('ai-step-upload');
+            const stepProcess = document.getElementById('ai-step-processing');
+            const stepResult = document.getElementById('ai-step-result');
+
+            aiTriggerBtn.addEventListener('click', () => {
+                if (!isLoggedIn) { showPage('account'); showToast("Log in to use AI."); return; }
+                stepUpload.classList.remove('hidden');
+                stepProcess.classList.add('hidden');
+                stepResult.classList.add('hidden');
+                aiFileInput.value = '';
+                aiModal.classList.replace('hidden-modal', 'visible-modal');
+            });
+
+            aiCloseBtn.addEventListener('click', () => aiModal.classList.replace('visible-modal', 'hidden-modal'));
+
+            aiFileInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    const imgData = e.target.result;
+                    const base64Clean = imgData.split(',')[1];
+
+                    stepUpload.classList.add('hidden');
+                    stepProcess.classList.remove('hidden');
+                    document.getElementById('ai-user-preview').src = imgData;
+
+                    try {
+                        const response = await fetch('/api/analyze-size', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ image: base64Clean, product: currentProductForAI.name })
+                        });
+                        
+                        const sizeData = await response.json();
+                        
+                        // Render Sizing Result
+                        document.getElementById('ai-sizing-result').innerHTML = `
+                            <div class="mb-4">
+                                <p class="text-xs uppercase text-gray-500 font-bold">Detected Build</p>
+                                <p class="text-lg">${sizeData.body_type || "Standard"}</p>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-xs uppercase text-gray-500 font-bold">Recommended Size</p>
+                                <p class="text-4xl font-header-dramatic font-bold text-ai-accent" id="ai-rec-size">${sizeData.recommended_size || "M"}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-purple-100">
+                                <p class="text-xs italic text-gray-600">"${sizeData.reasoning || "Based on your visual proportions."}"</p>
+                            </div>
+                        `;
+                        
+                        stepProcess.classList.add('hidden');
+                        stepResult.classList.remove('hidden');
+
+                    } catch (err) {
+                        console.error(err);
+                        showToast("AI analysis failed. Please try again.");
+                        stepProcess.classList.add('hidden');
+                        stepUpload.classList.remove('hidden');
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('ai-try-another').addEventListener('click', () => {
+                stepResult.classList.add('hidden');
+                stepUpload.classList.remove('hidden');
+            });
+
+            document.getElementById('ai-add-to-cart').addEventListener('click', () => {
+                const sizeText = document.getElementById('ai-rec-size').textContent;
+                cart.push({name: currentProductForAI.name, price: parseInt(currentProductForAI.price), size: sizeText, img: currentProductForAI.img});
+                saveState('cart', cart);
+                updateCart();
+                aiModal.classList.replace('visible-modal', 'hidden-modal');
+                showToast(`Added Size ${sizeText} to cart!`);
+            });
+        });
+    </script>
+</body>
+</html>
