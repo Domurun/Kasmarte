@@ -1,27 +1,10 @@
-Dependencies
-
 node_modules/
-package-lock.json
-yarn.lock
 
-Environment variables (Crucial for hiding GEMINI_API_KEY)
+package-lock.json
 
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-Vercel
 
 .vercel
-
-System
-
-.DS_Store
-Thumbs.db
-
-Build output
 
 dist/
 build/
