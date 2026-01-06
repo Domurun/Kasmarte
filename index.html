@@ -67,7 +67,7 @@
       
       /* Sections */
       .page-section{display:none}
-      .page-section.active{display:block}
+      .page-section.active{display:block; animation: fadeIn 0.4s ease-out forwards;}
       .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -101,15 +101,19 @@
       .plus-rotate { transition: transform 0.3s ease; }
       .plus-rotate.open { transform: rotate(45deg); }
 
+      /* Details/Summary Accordion for FAQ */
+      details > summary { list-style: none; }
+      details > summary::-webkit-details-marker { display: none; }
+      details[open] summary ~ * { animation: fadeIn 0.3s ease-in-out; }
+
     </style>
 </head>
-<body class="bg-brand-white font-body text-brand-black">
+<body class="bg-brand-white font-body text-brand-black flex flex-col min-h-screen">
 
     <div id="auth-toast" class="fixed top-24 left-1/2 transform -translate-x-1/2 bg-brand-black text-white px-6 py-4 rounded shadow-2xl z-50 transition-all duration-300 opacity-0 pointer-events-none text-sm font-bold tracking-wide">
         Please log in to continue.
     </div>
 
-    <!-- Size Guide Modal -->
     <div id="size-guide-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
         <div class="bg-brand-white w-full max-w-lg mx-4 md:mx-auto p-8 rounded-lg shadow-2xl relative">
             <button id="close-size-guide" class="absolute top-4 right-4 text-gray-500 hover:text-brand-black transition-colors">
@@ -128,10 +132,12 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt-4 text-center">
+                <a href="#" data-nav="size-guide-page" class="text-xs underline text-gray-500 hover:text-black">View Full Size Guide</a>
+            </div>
         </div>
     </div>
 
-    <!-- Success Order Modal -->
     <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
         <div class="bg-brand-white w-full max-w-md mx-4 p-8 rounded-lg shadow-2xl text-center relative">
             <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -143,10 +149,8 @@
         </div>
     </div>
 
-    <!-- AI Sizing Modal -->
     <div id="ai-tryon-modal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden-modal">
         <div class="bg-brand-white w-full max-w-3xl mx-4 md:mx-auto rounded-lg shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
-            <!-- Header -->
             <div class="p-6 border-b flex justify-between items-center bg-gray-50">
                 <div class="flex items-center gap-2">
                     <span class="w-8 h-8 rounded-full bg-ai-accent text-white flex items-center justify-center text-xs font-bold">AI</span>
@@ -157,9 +161,7 @@
                 </button>
             </div>
 
-            <!-- Body -->
             <div class="flex-grow overflow-y-auto p-6">
-                <!-- Step 1: Upload -->
                 <div id="ai-step-upload" class="flex flex-col items-center justify-center h-full min-h-[300px]">
                     <div class="text-center max-w-md w-full">
                         <div class="mx-auto w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
@@ -177,7 +179,6 @@
                     </div>
                 </div>
 
-                <!-- Step 2: Processing -->
                 <div id="ai-step-processing" class="hidden flex flex-col items-center justify-center h-full min-h-[300px]">
                     <div class="relative w-64 h-80 bg-gray-200 rounded-lg overflow-hidden mb-6 scanning">
                         <img id="ai-user-preview" class="w-full h-full object-cover opacity-80" src="">
@@ -188,13 +189,11 @@
                     <h3 id="ai-status-text" class="font-header-dramatic text-2xl animate-pulse">Consulting Stylist...</h3>
                 </div>
 
-                <!-- Step 3: Result -->
                 <div id="ai-step-result" class="hidden h-full min-h-[300px] flex flex-col items-center justify-center">
                     <div class="bg-red-50 p-8 rounded-lg border border-red-100 w-full max-w-md text-center">
                         <h3 class="font-header-dramatic text-2xl mb-4 text-ai-accent">Stylist Recommendation</h3>
                         <div id="ai-sizing-result">
-                            <!-- Injected by JS -->
-                        </div>
+                            </div>
                     </div>
                     
                     <div class="mt-8 space-y-3 w-full max-w-md">
@@ -210,34 +209,28 @@
         </div>
     </div>
 
-    <!-- Mobile Menu Overlay -->
     <div id="new-menu-overlay" class="bg-brand-white z-50">
         <ul class="flex flex-col items-center space-y-12 mt-10">
-            <!-- Home Icon -->
             <li>
                 <a href="#" class="flex flex-col items-center hover:text-ai-accent transition-colors" data-nav="home" aria-label="Home">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                 </a>
             </li>
-            <!-- Store Icon -->
             <li>
                 <a href="#" class="flex flex-col items-center hover:text-ai-accent transition-colors" data-nav="store" aria-label="Collection">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
                 </a>
             </li>
-            <!-- Lookbook Icon -->
             <li>
                 <a href="#" class="flex flex-col items-center hover:text-ai-accent transition-colors" data-nav="lookbook" aria-label="Lookbook">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                 </a>
             </li>
-            <!-- Wishlist Icon -->
             <li>
                 <a href="#" class="flex flex-col items-center hover:text-ai-accent transition-colors" data-nav="wishlist" aria-label="Wishlist">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
                 </a>
             </li>
-            <!-- Account Icon -->
             <li>
                 <a href="#" class="flex flex-col items-center hover:text-ai-accent transition-colors" data-nav="account" aria-label="Account">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
@@ -249,7 +242,6 @@
     <header id="main-header" class="bg-brand-white bg-opacity-90 backdrop-blur-sm shadow-sm sticky top-0 z-40 w-full transition-transform duration-500">
         <nav class="w-full px-6 md:px-12 py-4 flex justify-between items-center relative">
             <div class="hidden md:flex justify-start items-center space-x-8">
-                <!-- Desktop Nav Icons -->
                 <a href="#" class="hover:text-ai-accent transition-colors" data-nav="home" title="Home">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                 </a>
@@ -280,11 +272,8 @@
                 </a>
 
                 <button class="md:hidden hover:text-ai-accent transition-colors z-50 relative" id="menu-toggle-btn">
-                    <!-- Icon container for swap animation -->
                     <div class="relative w-7 h-7">
-                        <!-- PLUS SIGN (Default) -->
                         <svg id="icon-plus" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 absolute top-0 left-0 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                        <!-- CLOSE (X) SIGN (Active) -->
                         <svg id="icon-minus" xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 absolute top-0 left-0 opacity-0 transform rotate-90 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </div>
                 </button>
@@ -297,13 +286,9 @@
         </nav>
     </header>
 
-    <main>
+    <main class="flex-grow">
         <section class="page-section active" data-page="home">
-            <!-- Hero Video -->
             <div id="hero-section" class="relative h-[80vh] w-full overflow-hidden bg-black group">
-                <!-- 
-                   FIX: Removed leading slash. Now just "Video.mp4".
-                -->
                 <video autoplay loop muted playsinline webkit-playsinline 
                      poster="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop"
                      class="absolute top-0 left-0 w-full h-full object-cover opacity-80 grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
@@ -315,22 +300,18 @@
                 </div>
             </div>
 
-            <!-- Brand Strip -->
             <div class="bg-brand-black text-brand-white py-8">
                 <div class="container mx-auto px-6 text-center text-sm uppercase tracking-widest font-light">
                     <span>Handcrafted in Patience</span>
                 </div>
             </div>
 
-            <!-- FEATURED LOOKS (NEW) -->
             <section class="py-20 px-6 bg-white">
                 <div class="container mx-auto">
                     <h2 class="font-header-dramatic text-4xl md:text-5xl text-center mb-12">Featured Looks</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Look 1 -->
                         <div class="group cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()">
                             <div class="overflow-hidden mb-4">
-                                <!-- FIX: Removed leading slash. Now "image16.png". -->
                                 <img src="image16.png" class="w-full h-[500px] object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" onerror="this.src='https://images.unsplash.com/photo-1551488852-d81a1796013a?auto=format&fit=crop&w=800&q=80'" alt="THE FLORAL EMBROIDERY JACKET"></img>
                             </div>
                             <div class="text-center">
@@ -338,10 +319,8 @@
                                 <button class="text-xs uppercase tracking-widest border-b border-transparent group-hover:border-black transition-all">Shop Look</button>
                             </div>
                         </div>
-                        <!-- Look 2 -->
                         <div class="group cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()">
                             <div class="overflow-hidden mb-4">
-                                <!-- FIX: Removed leading slash. Now "image11.jpeg". -->
                                 <img src="image11.jpeg" class="w-full h-[500px] object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" onerror="this.src='https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80'" alt="THE CRISS-CROSS SET">
                             </div>
                             <div class="text-center">
@@ -349,29 +328,25 @@
                                 <button class="text-xs uppercase tracking-widest border-b border-transparent group-hover:border-black transition-all">Shop Look</button>
                             </div>
                         </div>
-                        <!-- Look 3 -->
                         <div class="group cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()">
                             <div class="overflow-hidden mb-4">
-                                <!-- FIX: Removed leading slash and corrected typo (mage0 -> image0). Now "image0.png". -->
                                 <img src="image0.png" class="w-full h-[500px] object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" onerror="this.src='https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80'" alt="CHERISH THE MOMENT SERIES">
                             </div>
                             <div class="text-center">
                                 <h3 class="font-header text-xl mb-1">CHERISH THE MOMENT SERIES</h3>
                                 <button class="text-xs uppercase tracking-widest border-b border-transparent group-hover:border-black transition-all">Shop Look</button>
                             </div>
-                        </div>    
+                        </div>     
                     </div>
                 </div>
             </section>
 
-            <!-- AI Promo Section -->
             <section class="bg-gray-50 py-24 overflow-hidden">
                 <div class="container mx-auto px-6">
                     <div class="flex flex-col md:flex-row items-center gap-16">
                         <div class="w-full md:w-1/2 relative group cursor-pointer" onclick="document.querySelector('[data-nav=store]').click()">
                             <div class="absolute inset-0 bg-gradient-to-r from-burgundy to-red-400 opacity-20 blur-2xl rounded-full transform -translate-x-10 translate-y-10 group-hover:opacity-30 transition-opacity"></div>
                             <div class="relative bg-white p-6 rounded-2xl shadow-xl border border-gray-100 transform group-hover:scale-[1.02] transition-transform duration-500">
-                                <!-- FIX: Removed leading slash. Now "image13.jpeg". -->
                                 <img src="image13.jpeg" class="w-full h-96 object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-700" onerror="this.src='https://images.unsplash.com/photo-1581044777550-4cfa60707c03?auto=format&fit=crop&w=800&q=80'" alt="AI FLORAL EMBROIDERY JACKET">
                                 <div class="mt-4 flex justify-between items-center text-sm font-bold">
                                     <span>SCAN COMPLETE</span>
@@ -393,11 +368,9 @@
                 </div>
             </section>
 
-            <!-- STORYBOARD (NEW) -->
             <section class="py-0 bg-brand-black text-brand-white">
                 <div class="flex flex-col md:flex-row">
                     <div class="w-full md:w-1/2 h-[600px]">
-                        <!-- FIX: Removed leading slash. Now "image14.jpeg". -->
                         <img src="image14.jpeg" class="w-full h-full object-cover opacity-80" onerror="this.src='https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80'" alt="The Art of Love">
                     </div>
                     <div class="w-full md:w-1/2 p-16 md:p-24 flex flex-col justify-center bg-zinc-900">
@@ -405,7 +378,7 @@
                         <h2 class="font-header-dramatic text-5xl mb-8">The Art of Love</h2>
                         <p class="text-gray-400 leading-relaxed mb-8 font-light">
                             A capsule about presence, patience, and quiet strength.
-Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precise lines. Fabrics that remember the body.
+                            Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precise lines. Fabrics that remember the body.
                         </p>
                         <a href="#" data-nav="lookbook" class="inline-block border border-white px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors self-start">View Story</a>
                     </div>
@@ -413,7 +386,196 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
             </section>
         </section>
 
-        <!-- (Rest of Sections - Lookbook, Store, Wishlist, Account, Profile, Checkout remain the same) -->
+        <section class="page-section" data-page="shipping-returns">
+            <div class="container mx-auto px-6 py-12 md:py-24 max-w-4xl">
+                <h1 class="font-header-dramatic text-5xl mb-8 text-center">Shipping & Returns</h1>
+                <div class="space-y-12">
+                    <div>
+                        <h3 class="font-header text-2xl mb-4 border-b border-gray-200 pb-2">Global Shipping</h3>
+                        <p class="text-gray-600 mb-4">We ship worldwide via DHL Express. All orders are processed within 1-2 business days. You will receive a tracking number once your package has been dispatched.</p>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2">
+                            <li>Domestic (Nigeria): 2-4 business days</li>
+                            <li>International (USA/EU): 5-7 business days</li>
+                            <li>Rest of World: 7-10 business days</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-header text-2xl mb-4 border-b border-gray-200 pb-2">Return Policy</h3>
+                        <p class="text-gray-600 mb-4">We accept returns within 14 days of delivery. Items must be unworn, unwashed, and with all original tags attached. To initiate a return, please visit your account page or contact support.</p>
+                        <p class="text-gray-600">Please note that personalized or made-to-measure items are final sale.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="size-guide-page">
+            <div class="container mx-auto px-6 py-12 md:py-24 max-w-4xl">
+                <h1 class="font-header-dramatic text-5xl mb-8 text-center">Size Guide</h1>
+                <p class="text-center text-gray-600 mb-12">Our fits are designed for a modern, relaxed silhouette. Use the chart below or our AI Sizing tool on product pages.</p>
+                <div class="overflow-x-auto bg-white shadow-sm rounded-lg p-8 border border-gray-100">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="py-4 px-4 font-header text-lg">Size</th>
+                                <th class="py-4 px-4 font-header text-lg">Chest (cm)</th>
+                                <th class="py-4 px-4 font-header text-lg">Waist (cm)</th>
+                                <th class="py-4 px-4 font-header text-lg">Hips (cm)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600">
+                            <tr class="border-b border-gray-100"><td class="py-4 px-4 font-bold">S</td><td class="px-4">88-92</td><td class="px-4">76-80</td><td class="px-4">92-96</td></tr>
+                            <tr class="border-b border-gray-100"><td class="py-4 px-4 font-bold">M</td><td class="px-4">96-100</td><td class="px-4">84-88</td><td class="px-4">100-104</td></tr>
+                            <tr class="border-b border-gray-100"><td class="py-4 px-4 font-bold">L</td><td class="px-4">104-108</td><td class="px-4">92-96</td><td class="px-4">108-112</td></tr>
+                            <tr class="border-b border-gray-100"><td class="py-4 px-4 font-bold">XL</td><td class="px-4">112-116</td><td class="px-4">100-104</td><td class="px-4">116-120</td></tr>
+                            <tr><td class="py-4 px-4 font-bold">XXL</td><td class="px-4">120-124</td><td class="px-4">108-112</td><td class="px-4">124-128</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="faq">
+            <div class="container mx-auto px-6 py-12 md:py-24 max-w-3xl">
+                <h1 class="font-header-dramatic text-5xl mb-12 text-center">F.A.Q.</h1>
+                <div class="space-y-4">
+                    <details class="group bg-gray-50 p-6 rounded-lg cursor-pointer">
+                        <summary class="font-header text-xl font-bold flex justify-between items-center">
+                            <span>How accurate is the AI Sizing?</span>
+                            <span class="transform group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <p class="mt-4 text-gray-600">Our AI model analyzes visual keypoints to estimate your measurements with high accuracy. However, personal preference for fit (loose vs. tight) varies. We recommend checking the size chart as well.</p>
+                    </details>
+                    <details class="group bg-gray-50 p-6 rounded-lg cursor-pointer">
+                        <summary class="font-header text-xl font-bold flex justify-between items-center">
+                            <span>Do you offer international shipping?</span>
+                            <span class="transform group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <p class="mt-4 text-gray-600">Yes, we ship to over 50 countries via DHL Express. Shipping rates are calculated at checkout.</p>
+                    </details>
+                    <details class="group bg-gray-50 p-6 rounded-lg cursor-pointer">
+                        <summary class="font-header text-xl font-bold flex justify-between items-center">
+                            <span>What materials do you use?</span>
+                            <span class="transform group-open:rotate-180 transition-transform">▼</span>
+                        </summary>
+                        <p class="mt-4 text-gray-600">We prioritize natural fibers including linen, cotton, and silk sourced ethically. Detailed composition is listed on every product page.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="contact">
+            <div class="container mx-auto px-6 py-12 md:py-24 max-w-4xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h1 class="font-header-dramatic text-5xl mb-6">Contact Us</h1>
+                        <p class="text-gray-600 mb-8">We are here to assist with styling advice, order inquiries, or general questions about the brand.</p>
+                        <div class="space-y-4 text-sm font-bold">
+                            <p>EMAIL: support@kasmarte.com</p>
+                            <p>PHONE: +234 800 000 0000</p>
+                            <p>ADDRESS: Onne, Rivers, Nigeria</p>
+                        </div>
+                    </div>
+                    <form class="space-y-4" onsubmit="event.preventDefault(); showToast('Message Sent! We will contact you shortly.'); this.reset();">
+                        <input type="text" placeholder="Name" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded focus:border-brand-black outline-none">
+                        <input type="email" placeholder="Email" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded focus:border-brand-black outline-none">
+                        <textarea rows="5" placeholder="Message" required class="w-full p-4 bg-gray-50 border border-gray-200 rounded focus:border-brand-black outline-none"></textarea>
+                        <button class="bg-brand-black text-brand-white px-8 py-4 font-bold uppercase tracking-widest hover:opacity-90 transition w-full">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="gift-cards">
+            <div class="container mx-auto px-6 py-12 md:py-24 text-center">
+                <h1 class="font-header-dramatic text-5xl mb-6">The Gift of Choice</h1>
+                <p class="max-w-xl mx-auto text-gray-600 mb-12">Give the gift of poetic luxury. Delivered instantly via email.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <div class="border border-gray-200 p-8 rounded hover:border-black cursor-pointer transition" onclick="showToast('Added $100 Gift Card to Cart');">
+                        <div class="bg-black text-white h-40 flex items-center justify-center font-header text-2xl mb-4">KASMARTE</div>
+                        <h3 class="font-bold text-xl">$100 Gift Card</h3>
+                        <button class="mt-4 text-xs uppercase underline">Add to Cart</button>
+                    </div>
+                    <div class="border border-gray-200 p-8 rounded hover:border-black cursor-pointer transition" onclick="showToast('Added $250 Gift Card to Cart');">
+                        <div class="bg-black text-white h-40 flex items-center justify-center font-header text-2xl mb-4">KASMARTE</div>
+                        <h3 class="font-bold text-xl">$250 Gift Card</h3>
+                        <button class="mt-4 text-xs uppercase underline">Add to Cart</button>
+                    </div>
+                    <div class="border border-gray-200 p-8 rounded hover:border-black cursor-pointer transition" onclick="showToast('Added $500 Gift Card to Cart');">
+                        <div class="bg-black text-white h-40 flex items-center justify-center font-header text-2xl mb-4">KASMARTE</div>
+                        <h3 class="font-bold text-xl">$500 Gift Card</h3>
+                        <button class="mt-4 text-xs uppercase underline">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="our-story">
+            <div class="container mx-auto px-6 py-12 md:py-24 max-w-4xl text-center">
+                <span class="text-ai-accent uppercase tracking-widest text-xs font-bold">About Us</span>
+                <h1 class="font-header-dramatic text-5xl md:text-7xl mt-4 mb-12">A Dialogue of Cultures</h1>
+                <p class="text-lg md:text-xl text-gray-600 leading-relaxed mb-12 font-light">
+                    KasMartē is born from the intersection of two worlds. The vibrant, rhythmic soul of Nigeria and the sleek, structural modernism of America. We do not just make clothes; we craft quiet statements of power.
+                </p>
+                <div class="aspect-video bg-gray-200 w-full mb-12">
+                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover grayscale">
+                </div>
+                <p class="text-gray-500 max-w-2xl mx-auto">
+                    Founded in 2025, our mission is to bring tailored luxury to the digital age, ensuring that every garment fits not just the body, but the spirit of the wearer.
+                </p>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="sustainability">
+            <div class="container mx-auto px-6 py-12 md:py-24 max-w-4xl">
+                <h1 class="font-header-dramatic text-5xl mb-8">Conscious Luxury</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="font-bold text-xl mb-4">Slow Fashion</h3>
+                        <p class="text-gray-600">We reject the pace of fast fashion. Our collections are released in small capsules, minimizing waste and ensuring that every piece receives the attention it deserves.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-xl mb-4">Ethical Sourcing</h3>
+                        <p class="text-gray-600">From the cotton fields to the final stitch, we ensure fair wages and safe working conditions for every artisan involved in the creation of a KasMartē garment.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="careers">
+            <div class="container mx-auto px-6 py-12 md:py-24 max-w-3xl text-center">
+                <h1 class="font-header-dramatic text-5xl mb-6">Join the Atelier</h1>
+                <p class="text-gray-600 mb-12">We are always looking for visionaries in design, technology, and operations.</p>
+                <div class="border-t border-b border-gray-200 py-8 text-left">
+                    <h3 class="font-bold text-lg">Senior Fashion Designer</h3>
+                    <p class="text-sm text-gray-500 mb-2">Remote / Hybrid</p>
+                    <a href="mailto:careers@kasmarte.com" class="text-ai-accent underline text-sm">Apply via Email</a>
+                </div>
+                <div class="border-b border-gray-200 py-8 text-left">
+                    <h3 class="font-bold text-lg">AI Integration Specialist</h3>
+                    <p class="text-sm text-gray-500 mb-2">Remote</p>
+                    <a href="mailto:careers@kasmarte.com" class="text-ai-accent underline text-sm">Apply via Email</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" data-page="press">
+            <div class="container mx-auto px-6 py-12 md:py-24 max-w-4xl">
+                <h1 class="font-header-dramatic text-5xl mb-12 text-center">Press</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-gray-50 p-8">
+                        <p class="text-xs font-bold text-gray-400 mb-2">VOGUE • OCT 2025</p>
+                        <h3 class="font-header text-2xl mb-4">"The Nigerian Brand Redefining Fit with AI"</h3>
+                        <p class="text-gray-600 text-sm">KasMartē combines heritage craftsmanship with cutting-edge technology...</p>
+                    </div>
+                    <div class="bg-gray-50 p-8">
+                        <p class="text-xs font-bold text-gray-400 mb-2">GQ • NOV 2025</p>
+                        <h3 class="font-header text-2xl mb-4">"Quiet Luxury Has a New Name"</h3>
+                        <p class="text-gray-600 text-sm">In a world of noise, KasMartē offers a moment of silence and impeccable tailoring...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="page-section" data-page="lookbook">
             <div class="container mx-auto px-6 py-12 md:py-20">
                 <h1 class="font-header-dramatic text-6xl md:text-8xl text-center mb-16">Lookbook</h1>
@@ -435,8 +597,7 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
                     <svg class="h-5 w-5 absolute left-2 top-3.5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 </div>
                 <div id="store-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in">
-                    <!-- Products injected via JS -->
-                </div>
+                    </div>
             </div>
         </section>
 
@@ -449,7 +610,6 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
              </div>
         </section>
 
-        <!-- ACCOUNT: LOGIN / SIGNUP -->
         <section class="page-section" data-page="account">
             <div class="container mx-auto px-6 py-12 md:py-24">
                 <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden">
@@ -480,13 +640,11 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
             </div>
         </section>
 
-        <!-- PROFILE PAGE -->
         <section class="page-section" data-page="profile">
             <div class="container mx-auto px-6 py-12 md:py-20">
                 <h1 class="font-header-dramatic text-5xl md:text-6xl text-center mb-12">My Profile</h1>
                 
                 <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Sidebar -->
                     <div class="col-span-1">
                         <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
                             <div class="flex items-center gap-4 mb-6">
@@ -504,7 +662,6 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
                         </div>
                     </div>
 
-                    <!-- Main Form -->
                     <div class="col-span-1 md:col-span-2">
                         <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
                             <h2 class="font-header text-2xl mb-6 uppercase border-b pb-4">Edit Personal Info</h2>
@@ -575,7 +732,6 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
                                     <svg class="h-6 w-6 heart-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
                                 </button>
                             </div>
-                            <!-- AI Button -->
                             <button id="ai-trigger-btn" class="w-full border-2 border-ai-accent text-ai-accent hover:bg-ai-accent hover:text-white font-bold text-sm py-3 rounded-md transition uppercase tracking-wider flex items-center justify-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                                 Find My Size (AI)
@@ -640,55 +796,51 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
     <footer class="bg-gray-50 border-t border-brand-black border-opacity-10 mt-20 pt-16 pb-12">
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                <!-- Newsletter -->
                 <div class="md:col-span-1">
                     <h4 class="font-header text-lg font-bold mb-6">Subscribe to our Newsletter</h4>
                     <p class="text-sm text-gray-500 mb-4">Receive early access to collections and exclusive tailoring tips.</p>
                     <div class="flex border-b border-black pb-2">
                         <input type="email" placeholder="Email Address" class="bg-transparent w-full focus:outline-none text-sm">
-                        <button class="text-xs font-bold uppercase hover:text-ai-accent transition-colors">Join</button>
+                        <button class="text-xs font-bold uppercase hover:text-ai-accent transition-colors" onclick="showToast('Subscribed Successfully!')">Join</button>
                     </div>
                 </div>
 
-                <!-- Shop Links -->
                 <div class="md:col-span-1 border-b md:border-none border-gray-200 pb-4 md:pb-0">
                     <button class="footer-accordion-btn w-full flex justify-between items-center py-2 md:py-0" onclick="toggleFooterMenu(this)">
                         <h4 class="font-header text-lg font-bold md:mb-6">Shop</h4>
                         <span class="plus-rotate md:hidden text-lg">+</span>
                     </button>
                     <ul class="footer-menu collapsed md:collapsed-none space-y-3 text-sm text-gray-500 mt-2 md:mt-0">
-                        <li><a href="#" onclick="document.querySelector('[data-nav=store]').click()" class="hover:text-black transition-colors">New Arrivals</a></li>
-                        <li><a href="#" onclick="document.querySelector('[data-nav=store]').click()" class="hover:text-black transition-colors">Best Sellers</a></li>
-                        <li><a href="#" onclick="document.querySelector('[data-nav=store]').click()" class="hover:text-black transition-colors">Essentials</a></li>
-                        <li><a href="#" onclick="document.querySelector('[data-nav=store]').click()" class="hover:text-black transition-colors">Gift Cards</a></li>
+                        <li><a href="#" onclick="document.querySelector('[data-nav=store]').click(); showToast('Filtering: New Arrivals');" class="hover:text-black transition-colors">New Arrivals</a></li>
+                        <li><a href="#" onclick="document.querySelector('[data-nav=store]').click(); showToast('Filtering: Best Sellers');" class="hover:text-black transition-colors">Best Sellers</a></li>
+                        <li><a href="#" onclick="document.querySelector('[data-nav=store]').click(); showToast('Filtering: Essentials');" class="hover:text-black transition-colors">Essentials</a></li>
+                        <li><a href="#" data-nav="gift-cards" class="hover:text-black transition-colors">Gift Cards</a></li>
                     </ul>
                 </div>
 
-                <!-- Support Links -->
                 <div class="md:col-span-1 border-b md:border-none border-gray-200 pb-4 md:pb-0">
                     <button class="footer-accordion-btn w-full flex justify-between items-center py-2 md:py-0" onclick="toggleFooterMenu(this)">
                         <h4 class="font-header text-lg font-bold md:mb-6">Support</h4>
                         <span class="plus-rotate md:hidden text-lg">+</span>
                     </button>
                     <ul class="footer-menu collapsed md:collapsed-none space-y-3 text-sm text-gray-500 mt-2 md:mt-0">
-                        <li><a href="#" class="hover:text-black transition-colors">Shipping & Returns</a></li>
-                        <li><a href="#" class="hover:text-black transition-colors">Size Guide</a></li>
-                        <li><a href="#" class="hover:text-black transition-colors">FAQ</a></li>
-                        <li><a href="#" class="hover:text-black transition-colors">Contact Us</a></li>
+                        <li><a href="#" data-nav="shipping-returns" class="hover:text-black transition-colors">Shipping & Returns</a></li>
+                        <li><a href="#" data-nav="size-guide-page" class="hover:text-black transition-colors">Size Guide</a></li>
+                        <li><a href="#" data-nav="faq" class="hover:text-black transition-colors">FAQ</a></li>
+                        <li><a href="#" data-nav="contact" class="hover:text-black transition-colors">Contact Us</a></li>
                     </ul>
                 </div>
 
-                <!-- Company Links -->
                 <div class="md:col-span-1 border-b md:border-none border-gray-200 pb-4 md:pb-0">
                     <button class="footer-accordion-btn w-full flex justify-between items-center py-2 md:py-0" onclick="toggleFooterMenu(this)">
                         <h4 class="font-header text-lg font-bold md:mb-6">Company</h4>
                         <span class="plus-rotate md:hidden text-lg">+</span>
                     </button>
                     <ul class="footer-menu collapsed md:collapsed-none space-y-3 text-sm text-gray-500 mt-2 md:mt-0">
-                        <li><a href="#" class="hover:text-black transition-colors">Our Story</a></li>
-                        <li><a href="#" class="hover:text-black transition-colors">Sustainability</a></li>
-                        <li><a href="#" class="hover:text-black transition-colors">Careers</a></li>
-                        <li><a href="#" class="hover:text-black transition-colors">Press</a></li>
+                        <li><a href="#" data-nav="our-story" class="hover:text-black transition-colors">Our Story</a></li>
+                        <li><a href="#" data-nav="sustainability" class="hover:text-black transition-colors">Sustainability</a></li>
+                        <li><a href="#" data-nav="careers" class="hover:text-black transition-colors">Careers</a></li>
+                        <li><a href="#" data-nav="press" class="hover:text-black transition-colors">Press</a></li>
                     </ul>
                 </div>
             </div>
@@ -698,15 +850,12 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
                     &copy; 2025 KasMarte. All Rights Reserved.
                 </div>
                 <div class="flex gap-6 items-center">
-                    <!-- Instagram -->
                     <a href="#" class="text-gray-400 hover:text-black transition-colors">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
-                    <!-- X (Twitter) -->
                     <a href="#" class="text-gray-400 hover:text-black transition-colors">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     </a>
-                    <!-- TikTok -->
                     <a href="#" class="text-gray-400 hover:text-black transition-colors">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93v6.16c0 2.52-1.12 4.84-3.11 6.24-2.22 1.57-5.22 1.56-7.41-.03-1.87-1.36-2.81-3.71-2.54-6.06.26-2.3 1.6-4.3 3.59-5.27 1.77-.87 3.94-.7 5.73.47v4.55c-2.79-.86-5.59.95-5.71 3.8-.07 1.55.8 3.03 2.18 3.69 1.39.66 3.1.28 4.12-.86.91-1.01 1.25-2.42 1.05-3.8V4.01c-.98.37-2.02.58-3.08.61V.02h1.16z"/></svg>
                     </a>
@@ -776,16 +925,17 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
             const iconMinus = document.getElementById('icon-minus');
 
             // --- 5. CORE FUNCTIONS ---
-            function showToast(message) {
+            window.showToast = function(message) {
                 authToast.textContent = message;
                 authToast.classList.remove('opacity-0', 'pointer-events-none');
                 setTimeout(() => authToast.classList.add('opacity-0', 'pointer-events-none'), 3000);
             }
 
-            function showPage(pageName) {
+            window.showPage = function(pageName) {
                 pages.forEach(p => p.classList.remove('active'));
                 const target = document.querySelector(`.page-section[data-page="${pageName}"]`);
                 if(target) target.classList.add('active');
+                else console.warn("Page not found:", pageName);
                 
                 if(pageName === 'checkout') renderCheckout();
                 if(pageName === 'wishlist') renderWishlist();
@@ -854,7 +1004,7 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
                     if(navTarget === 'account' && isLoggedIn) {
                         showPage('profile');
                     } else {
-                        showPage('home'); // Reset scroll if needed
+                        // Special handling for same-page view
                         showPage(navTarget);
                     }
                 });
@@ -1075,6 +1225,14 @@ Designed under the KasMartē philosophy of poetic luxury. Oversized calm. Precis
             document.getElementById('close-success-modal').addEventListener('click', () => {
                 document.getElementById('success-modal').classList.replace('visible-modal', 'hidden-modal');
                 showPage('store');
+            });
+
+            // Size Guide Trigger on Product Page
+            document.getElementById('size-guide-trigger').addEventListener('click', () => {
+                document.getElementById('size-guide-modal').classList.replace('hidden-modal', 'visible-modal');
+            });
+            document.getElementById('close-size-guide').addEventListener('click', () => {
+                 document.getElementById('size-guide-modal').classList.replace('visible-modal', 'hidden-modal');
             });
 
             // --- AI MODAL LOGIC (Gemini API Integration) ---
